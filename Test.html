@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINTESI | Archivio Integrale 20 Protagonisti</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Space+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --bg: #070708; --cyan: #22d3ee; --amber: #f59e0b; --emerald: #10b981; --purple: #a855f7; }
+        body { background-color: var(--bg); color: #d1d5db; font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+        .glass { backdrop-filter: blur(16px); background: rgba(15, 15, 18, 0.85); border: 1px solid rgba(255,255,255,0.08); }
+        
+        /* Sticky Era Headers */
+        .era-header { position: sticky; top: 10%; z-index: 20; margin-bottom: 6rem; pointer-events: none; }
+        .era-title { font-size: 8rem; line-height: 0.8; opacity: 0.03; position: absolute; left: -1rem; top: -2rem; font-weight: 800; white-space: nowrap; text-transform: uppercase; }
+        .era-date-box { display: inline-block; padding: 0.6rem 1.8rem; background: rgba(255,255,255,0.03); border-left: 4px solid currentColor; font-family: 'Space Mono', monospace; font-size: 1.4rem; font-weight: 700; letter-spacing: 0.2em; }
+
+        /* Tech Details */
+        .tech-border { position: relative; }
+        .tech-border::before { content:''; position: absolute; top: -2px; left: -2px; width: 25px; height: 25px; border-top: 3px solid var(--cyan); border-left: 3px solid var(--cyan); }
+        
+        .nav-square { aspect-ratio: 1/1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; border: 1px solid rgba(255,255,255,0.05); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); font-size: 12px; }
+        .nav-square:hover { transform: translateY(-5px); border-color: currentColor; background: rgba(255,255,255,0.05); box-shadow: 0 15px 30px -10px currentColor; }
+        
+        .sci-card { opacity: 0; transform: translateY(50px); margin-bottom: 10rem; }
+
+        /* Infografiche */
+        #visual-boyle { width: 80px; height: 120px; border: 2px solid var(--amber); position: relative; }
+        #pistone-boyle { width: 76px; height: 30px; background: rgba(245, 158, 11, 0.4); border-bottom: 2px solid var(--amber); position: absolute; top: 0; left: 0; }
+        #gas-boyle { width: 100%; height: 100%; background: radial-gradient(circle, rgba(245,158,11,0.2) 0%, transparent 80%); position: absolute; bottom: 0; transform-origin: bottom; }
+        
+        .mendeleev-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 120px; }
+        .m-cell { padding: 4px; border: 1px solid rgba(16, 185, 129, 0.2); text-align: center; font-size: 10px; font-family: 'Space Mono'; }
+        .m-cell.predicted { border: 1px solid var(--emerald); color: white; background: rgba(16, 185, 129, 0.1); opacity: 0; }
+    </style>
+</head>
+<body>
+
+    <header class="h-screen flex flex-col items-center justify-center text-center px-4 relative">
+        <div class="tech-border p-16 glass relative">
+            <span class="font-mono text-cyan-400 text-sm tracking-[0.6em] uppercase mb-4 block animate-pulse">System_Core_Loaded</span>
+            <h1 class="text-8xl md:text-[11rem] font-bold mb-4 text-white tracking-tighter uppercase leading-none">SINTESI</h1>
+            <p class="text-xl text-gray-500 font-light max-w-2xl mx-auto uppercase tracking-[0.3em]">L'Archivio Integrale della Storia Chimica</p>
+        </div>
+    </header>
+
+    <nav class="max-w-6xl mx-auto px-6 mb-80">
+        <div class="grid grid-cols-5 md:grid-cols-10 gap-3">
+            <a href="#boyle" class="nav-square text-amber-500">Bo<span>01</span></a>
+            <a href="#lavoisier" class="nav-square text-amber-500">La<span>02</span></a>
+            <a href="#dalton" class="nav-square text-amber-500">Da<span>03</span></a>
+            <a href="#avogadro" class="nav-square text-amber-500">Av<span>04</span></a>
+            <a href="#berzelius" class="nav-square text-amber-500">Be<span>05</span></a>
+            <a href="#wohler" class="nav-square text-emerald-500">Wo<span>06</span></a>
+            <a href="#pasteur" class="nav-square text-emerald-500">Pa<span>07</span></a>
+            <a href="#kekule" class="nav-square text-emerald-500">Ke<span>08</span></a>
+            <a href="#mendeleev" class="nav-square text-emerald-500">Me<span>09</span></a>
+            <a href="#arrhenius" class="nav-square text-emerald-500">Ar<span>10</span></a>
+            <a href="#curie" class="nav-square text-purple-500">Cu<span>11</span></a>
+            <a href="#rutherford" class="nav-square text-purple-500">Ru<span>12</span></a>
+            <a href="#lewis" class="nav-square text-purple-500">Le<span>13</span></a>
+            <a href="#bohr" class="nav-square text-purple-500">Bo<span>14</span></a>
+            <a href="#pauling" class="nav-square text-purple-500">Pl<span>15</span></a>
+            <a href="#hodgkin" class="nav-square text-cyan-400">Ho<span>16</span></a>
+            <a href="#franklin" class="nav-square text-cyan-400">Fr<span>17</span></a>
+            <a href="#woodward" class="nav-square text-cyan-400">Wd<span>18</span></a>
+            <a href="#sanger" class="nav-square text-cyan-400">Sa<span>19</span></a>
+            <a href="#zewail" class="nav-square text-cyan-400">Ze<span>20</span></a>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-6 pb-60">
+
+        <div class="relative border-l-2 border-amber-500/20 pl-12 mb-60">
+            <div class="era-header text-amber-500">
+                <div class="era-title">Pioneers</div>
+                <div class="era-date-box">1660 — 1840</div>
+            </div>
+            
+            <section class="sci-card grid grid-cols-12 gap-6 items-center" id="boyle">
+                <div class="col-span-12 md:col-span-8 glass p-10 border-l-8 border-amber-500">
+                    <span class="font-mono text-amber-500 text-xs mb-2 block">1627-1691</span>
+                    <h2 class="text-4xl font-bold text-white uppercase tracking-tighter">Robert Boyle</h2>
+                    <p class="text-gray-400">La legge sui gas e la fine dell'alchimia mistica.</p>
+                </div>
+                <div class="col-span-12 md:col-span-4 flex justify-center"><div id="visual-boyle"><div id="gas-boyle"></div><div id="pistone-boyle"></div></div></div>
+            </section>
+
+            <section class="sci-card" id="lavoisier"><div class="glass p-10 border-l-8 border-amber-500"><span class="font-mono text-amber-500 text-xs mb-2 block">1743-1794</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Antoine Lavoisier</h2><p class="text-gray-400 mt-2">Fondatore della chimica moderna e legge della massa.</p></div></section>
+            <section class="sci-card" id="dalton"><div class="glass p-10 border-l-8 border-amber-500"><span class="font-mono text-amber-500 text-xs mb-2 block">1766-1844</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">John Dalton</h2><p class="text-gray-400 mt-2">Pioniere della moderna teoria atomica.</p></div></section>
+            <section class="sci-card" id="avogadro"><div class="glass p-10 border-l-8 border-amber-500"><span class="font-mono text-amber-500 text-xs mb-2 block">1776-1856</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Amedeo Avogadro</h2><p class="text-gray-400 mt-2">Definizione di molecola e volume dei gas.</p></div></section>
+            <section class="sci-card" id="berzelius"><div class="glass p-10 border-l-8 border-amber-500"><span class="font-mono text-amber-500 text-xs mb-2 block">1779-1848</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Jacob Berzelius</h2><p class="text-gray-400 mt-2">Creatore della moderna simbologia chimica.</p></div></section>
+        </div>
+
+        <div class="relative border-l-2 border-emerald-500/20 pl-12 mb-60">
+            <div class="era-header text-emerald-500">
+                <div class="era-title">Structure</div>
+                <div class="era-date-box">1820 — 1890</div>
+            </div>
+
+            <section class="sci-card" id="wohler"><div class="glass p-10 border-l-8 border-emerald-500"><span class="font-mono text-emerald-500 text-xs mb-2 block">1800-1882</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Friedrich Wöhler</h2><p class="text-gray-400 mt-2">Padre della chimica organica (sintesi dell'urea).</p></div></section>
+            <section class="sci-card" id="pasteur"><div class="glass p-10 border-l-8 border-emerald-500"><span class="font-mono text-emerald-500 text-xs mb-2 block">1822-1895</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Louis Pasteur</h2><p class="text-gray-400 mt-2">Scoprì l'asimmetria delle molecole (chiralità).</p></div></section>
+            <section class="sci-card" id="kekule"><div class="glass p-10 border-l-8 border-emerald-500"><span class="font-mono text-emerald-500 text-xs mb-2 block">1829-1896</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">August Kekulé</h2><p class="text-gray-400 mt-2">La struttura dell'anello benzenico.</p></div></section>
+            
+            <section class="sci-card grid grid-cols-12 gap-6 items-center" id="mendeleev">
+                <div class="col-span-12 md:col-span-8 glass p-10 border-l-8 border-emerald-500">
+                    <span class="font-mono text-emerald-500 text-xs mb-2 block">1834-1907</span>
+                    <h2 class="text-4xl font-bold text-white uppercase tracking-tighter">Dmitri Mendeleev</h2>
+                    <p class="text-gray-400">Architetto del sistema periodico degli elementi.</p>
+                </div>
+                <div class="col-span-12 md:col-span-4 flex justify-center"><div class="mendeleev-grid"><div class="m-cell">H</div><div class="m-cell">He</div><div class="m-cell predicted">Ga</div><div class="m-cell">C</div><div class="m-cell predicted">Ge</div><div class="m-cell">O</div></div></div>
+            </section>
+            
+            <section class="sci-card" id="arrhenius"><div class="glass p-10 border-l-8 border-emerald-500"><span class="font-mono text-emerald-500 text-xs mb-2 block">1859-1927</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Svante Arrhenius</h2><p class="text-gray-400 mt-2">Teoria della dissociazione elettrolitica.</p></div></section>
+        </div>
+
+        <div class="relative border-l-2 border-purple-500/20 pl-12 mb-60">
+            <div class="era-header text-purple-500">
+                <div class="era-title">Atoms</div>
+                <div class="era-date-box">1890 — 1950</div>
+            </div>
+
+            <section class="sci-card" id="curie"><div class="glass p-10 border-l-8 border-purple-500"><span class="font-mono text-purple-400 text-xs mb-2 block">1867-1934</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Marie Curie</h2><p class="text-gray-400 mt-2">Studi sulla radioattività e isolamento del Radio.</p></div></section>
+            <section class="sci-card" id="rutherford"><div class="glass p-10 border-l-8 border-purple-500"><span class="font-mono text-purple-400 text-xs mb-2 block">1871-1937</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Ernest Rutherford</h2><p class="text-gray-400 mt-2">Scoperta del nucleo atomico.</p></div></section>
+            <section class="sci-card" id="lewis"><div class="glass p-10 border-l-8 border-purple-500"><span class="font-mono text-purple-400 text-xs mb-2 block">1875-1946</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Gilbert Lewis</h2><p class="text-gray-400 mt-2">Definizione di legame covalente e coppie elettroniche.</p></div></section>
+            <section class="sci-card" id="bohr"><div class="glass p-10 border-l-8 border-purple-500"><span class="font-mono text-purple-400 text-xs mb-2 block">1885-1962</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Niels Bohr</h2><p class="text-gray-400 mt-2">Modello atomico a livelli energetici quantizzati.</p></div></section>
+            <section class="sci-card" id="pauling"><div class="glass p-10 border-l-8 border-purple-500"><span class="font-mono text-purple-400 text-xs mb-2 block">1901-1994</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Linus Pauling</h2><p class="text-gray-400 mt-2">Elettronegatività e natura del legame chimico.</p></div></section>
+        </div>
+
+        <div class="relative border-l-2 border-cyan-400/20 pl-12 mb-40">
+            <div class="era-header text-cyan-400">
+                <div class="era-title">Modern</div>
+                <div class="era-date-box">1950 — OGGI</div>
+            </div>
+
+            <section class="sci-card" id="hodgkin"><div class="glass p-10 border-l-8 border-cyan-400"><span class="font-mono text-cyan-400 text-xs mb-2 block">1910-1994</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Dorothy Hodgkin</h2><p class="text-gray-400 mt-2">Mappatura cristallografica di penicillina e insulina.</p></div></section>
+            <section class="sci-card" id="franklin"><div class="glass p-10 border-l-8 border-cyan-400"><span class="font-mono text-cyan-400 text-xs mb-2 block">1920-1958</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Rosalind Franklin</h2><p class="text-gray-400 mt-2">Diffrazione X del DNA (Foto 51).</p></div></section>
+            <section class="sci-card" id="woodward"><div class="glass p-10 border-l-8 border-cyan-400"><span class="font-mono text-cyan-400 text-xs mb-2 block">1917-1979</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Robert Woodward</h2><p class="text-gray-400 mt-2">Il più grande maestro della sintesi organica complessa.</p></div></section>
+            <section class="sci-card" id="sanger"><div class="glass p-10 border-l-8 border-cyan-400"><span class="font-mono text-cyan-400 text-xs mb-2 block">1918-2013</span><h2 class="text-3xl font-bold text-white uppercase tracking-tighter">Frederick Sanger</h2><p class="text-gray-400 mt-2">Sequenziamento delle proteine e del DNA.</p></div></section>
+            <section class="sci-card" id="zewail"><div class="glass p-10 border-l-8 border-cyan-400"><span class="font-mono text-cyan-400 text-xs mb-2 block">1946-2016</span><h2 class="text-4xl font-bold text-white uppercase tracking-tighter">Ahmed Zewail</h2><p class="text-gray-400 mt-2">Femtochimica: osservazione delle reazioni ultraveloci.</p></div></section>
+        </div>
+
+    </main>
+
+    <script>
+        // Init Lenis
+        const lenis = new Lenis();
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Cards Entry Animation
+        document.querySelectorAll('.sci-card').forEach((card) => {
+            gsap.to(card, {
+                scrollTrigger: { trigger: card, start: "top 85%", scrub: 1 },
+                opacity: 1, y: 0
+            });
+        });
+
+        // Boyle Animation
+        gsap.to("#pistone-boyle", { y: 80, scrollTrigger: { trigger: "#boyle", start: "top center", end: "bottom center", scrub: 1 } });
+        gsap.to("#gas-boyle", { scaleY: 0.2, scrollTrigger: { trigger: "#boyle", start: "top center", end: "bottom center", scrub: 1 } });
+
+        // Mendeleev Animation
+        gsap.to(".m-cell.predicted", { 
+            opacity: 1, scale: 1, stagger: 0.2, 
+            scrollTrigger: { trigger: "#mendeleev", start: "top center", scrub: 1 } 
+        });
+
+        // Smooth anchors
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                lenis.scrollTo(this.getAttribute('href'));
+            });
+        });
+    </script>
+</body>
+</html>
