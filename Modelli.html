@@ -4,7 +4,349 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atomos - Modelli Storici</title>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+// =========================================================================
+// CONFIGURAZIONE SCENA, TELECAMERA E RENDERIZZATORE
+// FUNZIONE DI SUPPORTO PER CONFIGURARE UN APPARATO 3D IN UN CONTENITORE SPECIFICO
+// =========================================================================
+const container = document.getElementById('canvas-container');
+const scene = new THREE.Scene();
+function setupAtomEngine(containerId) {
+    const container = document.getElementById(containerId);
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.z = 10; 
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+    camera.position.z = 6;
+
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+container.appendChild(renderer.domElement);
+
+// Gruppo principale che conterrà tutto l'atomo (permettendo la rotazione con il mouse)
+const atomGroup = new THREE.Group();
+scene.add(atomGroup);
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0x00f2fe, 1.5);
+    dirLight.position.set(5, 5, 5);
+    scene.add(dirLight);
+
+    // Gestione ridimensionamento per i singoli box
+    window.addEventListener('resize', () => {
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+    });
+
+// =========================================================================
+// 1. ILLUMINAZIONE (Necessaria per dare volume 3D)
+// =========================================================================
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+scene.add(ambientLight);
+    return { scene, camera, renderer };
+}
+
+const dirLight1 = new THREE.DirectionalLight(0x00f2fe, 1.5);
+dirLight1.position.set(5, 5, 5);
+scene.add(dirLight1);
+// FUNZIONE TRUCCO PER PARTICELLE A CERCHI PERFETTI
+function createCircleMaterial(color, size, opacity) {
+    const mat = new THREE.PointsMaterial({
+        color: color, size: size, transparent: true, opacity: opacity, blending: THREE.AdditiveBlending, depthWrite: false
+    });
+    mat.onBeforeCompile = (shader) => {
+        shader.fragmentShader = shader.fragmentShader.replace('void main() {',
+            `void main() { vec2 coord = gl_PointCoord - vec2(0.5); float dist = length(coord); if (dist > 0.5) discard; float alpha = smoothstep(0.5, 0.1, dist);`
+        );
+        shader.fragmentShader = shader.fragmentShader.replace('gl_FragColor = vec4( diffuse, opacity );', 'gl_FragColor = vec4( diffuse, opacity * alpha );');
+    };
+    return mat;
+}
+
+const dirLight2 = new THREE.DirectionalLight(0xff00ff, 1);
+dirLight2.position.set(-5, -5, 3);
+scene.add(dirLight2);
+const clock = new THREE.Clock();
+
+// =========================================================================
+// 2. IL NUCLEO COPOSTO (Protoni e Neutroni)
+// INIZIALIZZAZIONE INDIPENDENTE DEI 5 ATOMI
+// =========================================================================
+const nucleusGroup = new THREE.Group();
+atomGroup.add(nucleusGroup);
+
+const sphereGeo = new THREE.SphereGeometry(0.3, 16, 16);
+const protonMat = new THREE.MeshPhongMaterial({ color: 0xff007f, shininess: 100 });
+const neutronMat = new THREE.MeshPhongMaterial({ color: 0x007fff, shininess: 100 });
+
+// Generiamo un agglomerato di sferette per fare un vero nucleo
+const particleCount = 12;
+for (let i = 0; i < particleCount; i++) {
+    const isProton = i % 2 === 0;
+    const mesh = new THREE.Mesh(sphereGeo, isProton ? protonMat : neutronMat);
+    
+    // Posiziona le sferette vicine al centro in modo casuale
+    mesh.position.set(
+        (Math.random() - 0.5) * 0.6,
+        (Math.random() - 0.5) * 0.6,
+        (Math.random() - 0.5) * 0.6
+    );
+    nucleusGroup.add(mesh);
+}
+
+// =========================================================================
+// 3. ORBITE ED ELETRONI
+// =========================================================================
+const orbitsData = [
+    { radius: 3.5, tiltX: 0.5, tiltY: 0.8, speed: 2.5, color: 0x00f2fe },
+    { radius: 4.2, tiltX: -0.6, tiltY: -0.4, speed: 1.8, color: 0x00f2fe },
+    { radius: 4.8, tiltX: 0.2, tiltY: -0.9, speed: 3.0, color: 0x00f2fe }
+];
+
+const electrons = [];
+const orbitLines = [];
+
+orbitsData.forEach(data => {
+    // Creazione anello dell'orbita
+    const orbitGeo = new THREE.RingGeometry(data.radius, data.radius + 0.03, 64);
+    const orbitMat = new THREE.MeshBasicMaterial({ 
+        color: 0xffffff, 
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.15
+    });
+    const orbit = new THREE.Mesh(orbitGeo, orbitMat);
+    
+    // Applica inclinazione dell'orbita
+    orbit.rotation.x = data.tiltX;
+    orbit.rotation.y = data.tiltY;
+    atomGroup.add(orbit);
+    orbitLines.push(orbit);
+
+    // Creazione Elettrone (Sfera luminosa)
+    const electronGeo = new THREE.SphereGeometry(0.15, 16, 16);
+    const electronMat = new THREE.MeshPhongMaterial({ 
+        color: 0x00f2fe, 
+        emissive: 0x00f2fe,
+        emissiveIntensity: 0.8 
+    });
+    const electron = new THREE.Mesh(electronGeo, electronMat);
+    atomGroup.add(electron);
+
+    // Salviamo i dati per muoverli nell'animate loop
+    electrons.push({
+        mesh: electron,
+        radius: data.radius,
+        tiltX: data.tiltX,
+        tiltY: data.tiltY,
+        speed: data.speed,
+        angle: Math.random() * Math.PI * 2 // Partenza casuale
+    });
+});
+// --- 1. MODELLO DI DALTON ---
+const d3d = setupAtomEngine('canvas-dalton');
+const daltonMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(1.4, 32, 32),
+    new THREE.MeshPhongMaterial({ color: 0x4a4e69, roughness: 0.8, metalness: 0.2 })
+);
+d3d.scene.add(daltonMesh);
+
+// --- 2. MODELLO DI THOMSON ---
+const t3d = setupAtomEngine('canvas-thomson');
+const thomsonGroup = new THREE.Group();
+t3d.scene.add(thomsonGroup);
+
+const pudding = new THREE.Mesh(
+    new THREE.SphereGeometry(1.5, 32, 32),
+    new THREE.MeshPhongMaterial({ color: 0xff0055, transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending })
+);
+thomsonGroup.add(pudding);
+
+const electronGeo = new THREE.SphereGeometry(0.1, 16, 16);
+const electronMat = new THREE.MeshPhongMaterial({ color: 0x00f2fe, emissive: 0x00f2fe, emissiveIntensity: 0.5 });
+for (let i = 0; i < 12; i++) {
+    const el = new THREE.Mesh(electronGeo, electronMat);
+    const u = Math.random(); const v = Math.random(); const theta = u * 2 * Math.PI; const phi = Math.acos(2 * v - 1); const r = Math.random() * 1.1;
+    el.position.set(r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi));
+    thomsonGroup.add(el);
+}
+
+// =========================================================================
+// 4. INTERATTIVITÀ MOUSE (Effetto Parallasse)
+// =========================================================================
+let mouseX = 0;
+let mouseY = 0;
+let targetX = 0;
+let targetY = 0;
+// --- 3. MODELLO DI RUTHERFORD ---
+const r3d = setupAtomEngine('canvas-rutherford');
+const ruthGroup = new THREE.Group();
+r3d.scene.add(ruthGroup);
+
+const ruthNucleus = new THREE.Mesh(new THREE.IcosahedronGeometry(0.18, 2), new THREE.MeshPhongMaterial({ color: 0xff00ff }));
+ruthGroup.add(ruthNucleus);
+
+const createOrbitLine = (radiusX, radiusY, rotX, rotY) => {
+    const points = [];
+    for(let i=0; i<=100; i++) { const t = (i/100)*Math.PI*2; points.push(new THREE.Vector3(Math.cos(t)*radiusX, Math.sin(t)*radiusY, 0)); }
+    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial({ color: 0xffffff, transparent:true, opacity:0.15 }));
+    line.rotation.x = rotX; line.rotation.y = rotY;
+    return line;
+};
+ruthGroup.add(createOrbitLine(1.8, 0.7, 0.6, 0.4), createOrbitLine(1.8, 0.7, -0.6, 1.2), createOrbitLine(1.8, 0.7, 1.4, -0.2));
+const re1 = new THREE.Mesh(electronGeo, electronMat); const re2 = new THREE.Mesh(electronGeo, electronMat);
+ruthGroup.add(re1, re2);
+
+// --- 4. MODELLO DI BOHR ---
+const b3d = setupAtomEngine('canvas-bohr');
+const bohrGroup = new THREE.Group();
+b3d.scene.add(bohrGroup);
+
+const bohrNucleus = new THREE.Mesh(new THREE.IcosahedronGeometry(0.2, 2), new THREE.MeshPhongMaterial({ color: 0xff00ff }));
+bohrGroup.add(bohrNucleus);
+
+const bO1 = new THREE.Mesh(new THREE.RingGeometry(1.0, 1.02, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
+const bO2 = new THREE.Mesh(new THREE.RingGeometry(1.6, 1.62, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
+const bO3 = new THREE.Mesh(new THREE.RingGeometry(2.2, 2.22, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
+bO1.rotation.x = bO2.rotation.x = bO3.rotation.x = Math.PI / 2.5;
+bohrGroup.add(bO1, bO2, bO3);
+
+const be1 = new THREE.Mesh(electronGeo, electronMat); const be2 = new THREE.Mesh(electronGeo, electronMat); const be3 = new THREE.Mesh(electronGeo, electronMat);
+bohrGroup.add(be1, be2, be3);
+
+// --- 5. MODELLO DI SCHRÖDINGER ---
+const s3d = setupAtomEngine('canvas-schrodinger');
+const schroGroup = new THREE.Group();
+s3d.scene.add(schroGroup);
+
+const schroNucleus = new THREE.Mesh(new THREE.IcosahedronGeometry(0.15, 2), new THREE.MeshPhongMaterial({ color: 0xff00ff }));
+schroGroup.add(schroNucleus);
+
+const qCount = 1500;
+const qGeometry = new THREE.BufferGeometry();
+const qPositions = new Float32Array(qCount * 3);
+for (let i = 0; i < qCount; i++) {
+    const theta = Math.random() * Math.PI * 2; const phi = Math.acos((Math.random() * 2) - 1);
+    const r = Math.pow(Math.random(), 2.5) * 1.6 + 0.1;
+    qPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta); qPositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta); qPositions[i * 3 + 2] = r * Math.cos(phi);
+}
+qGeometry.setAttribute('position', new THREE.BufferAttribute(qPositions, 3));
+const qCloud = new THREE.Points(qGeometry, createCircleMaterial(0x00f2fe, 0.1, 0.7));
+schroGroup.add(qCloud);
+
+window.addEventListener('mousemove', (event) => {
+    // Normalizza le coordinate del mouse (-1 a 1)
+    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+});
+
+// =========================================================================
+// 5. LOOP DI ANIMAZIONE
+// ANIMATION LOOP UNIFICATO
+// =========================================================================
+const clock = new THREE.Clock();
+
+function animate() {
+    requestAnimationFrame(animate);
+    const delta = clock.getDelta();
+    const elapsedTime = clock.getElapsedTime();
+
+    // 1. Fai vibrare leggermente il nucleo per dare energia
+    nucleusGroup.rotation.x += 0.01;
+    nucleusGroup.rotation.y += 0.01;
+    nucleusGroup.children.forEach((child, index) => {
+        child.position.x += Math.sin(elapsedTime * 5 + index) * 0.002;
+        child.position.y += Math.cos(elapsedTime * 5 + index) * 0.002;
+    });
+
+    // 2. Muovi gli elettroni lungo le loro orbite inclinate
+    electrons.forEach(el => {
+        el.angle += el.speed * delta; // Avanzamento basato sul tempo reale
+
+        // Calcolo posizione 2D sull'orbita piatta
+        let x = Math.cos(el.angle) * el.radius;
+        let y = Math.sin(el.angle) * el.radius;
+        let z = 0;
+
+        // Creiamo un vettore 3D e applichiamo le stesse rotazioni dell'orbita madre
+        const pos = new THREE.Vector3(x, y, z);
+        pos.applyAxisAngle(new THREE.Vector3(1, 0, 0), el.tiltX);
+        pos.applyAxisAngle(new THREE.Vector3(0, 1, 0), el.tiltY);
+
+        el.mesh.position.copy(pos);
+    });
+
+    // 3. Rotazione fluida dell'intero atomo in base al mouse
+    targetX = mouseX * 0.5;
+    targetY = mouseY * 0.5;
+
+    atomGroup.rotation.y += (targetX - atomGroup.rotation.y) * 0.05;
+    atomGroup.rotation.x += (targetY - atomGroup.rotation.x) * 0.05;
+
+    // Rotazione automatica di sottofondo costante minima
+    atomGroup.rotation.y += 0.002;
+
+    renderer.render(scene, camera);
+    const time = clock.getElapsedTime();
+
+    // Dalton
+    daltonMesh.rotation.y = time * 0.3;
+    d3d.renderer.render(d3d.scene, d3d.camera);
+
+    // Thomson
+    thomsonGroup.rotation.y = time * 0.2;
+    pudding.scale.setScalar(1 + Math.sin(time * 2) * 0.03);
+    t3d.renderer.render(t3d.scene, t3d.camera);
+
+    // Rutherford
+    ruthGroup.rotation.y = time * 0.05;
+    const posE1 = new THREE.Vector3(Math.cos(time * 3.5) * 1.8, Math.sin(time * 3.5) * 0.7, 0).applyAxisAngle(new THREE.Vector3(1,0,0), 0.6).applyAxisAngle(new THREE.Vector3(0,1,0), 0.4);
+    const posE2 = new THREE.Vector3(Math.cos(time * 2.8) * 1.8, Math.sin(time * 2.8) * 0.7, 0).applyAxisAngle(new THREE.Vector3(1,0,0), -0.6).applyAxisAngle(new THREE.Vector3(0,1,0), 1.2);
+    re1.position.copy(posE1); re2.position.copy(posE2);
+    r3d.renderer.render(r3d.scene, r3d.camera);
+
+    // Bohr
+    bohrGroup.rotation.y = time * 0.03;
+    const posB1 = new THREE.Vector3(Math.cos(time * 4) * 1.0, 0, Math.sin(time * 4) * 1.0).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
+    const posB2 = new THREE.Vector3(Math.cos(time * 2.5) * 1.6, 0, Math.sin(time * 2.5) * 1.6).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
+    const posB3 = new THREE.Vector3(Math.cos(time * 1.8) * 2.2, 0, Math.sin(time * 1.8) * 2.2).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
+    be1.position.copy(posB1); be2.position.copy(posB2); be3.position.copy(posB3);
+    b3d.renderer.render(b3d.scene, b3d.camera);
+
+    // Schrödinger
+    qCloud.rotation.y = time * 0.08;
+    qCloud.rotation.z = Math.sin(time * 0.3) * 0.1;
+    s3d.renderer.render(s3d.scene, s3d.camera);
+}
+
+animate();
+
+// =========================================================================
+// 6. GESTIONE RESPONSIVE
+// =========================================================================
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
+    </script>
+    
     <style>
         * {
             margin: 0;
