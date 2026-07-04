@@ -3,335 +3,369 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Storia dell'Atomo - Home</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Atomos - Modelli Storici</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<style>
-  /* Reset e Font */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-body {
-    background-color: #0a0a0c;
-    color: #ffffff;
-    overflow-x: hidden;
-}
+        body {
+            background-color: #0a0a0c;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
 
-/* Nav Bar Moderna */
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 8%;
-    background: rgba(10, 10, 12, 0.7);
-    backdrop-filter: blur(10px); /* Effetto vetro sfocato */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    z-index: 1000;
-}
+        /* Nav Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: rgba(10, 10, 12, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
 
-.logo {
-    font-size: 24px;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
+        .logo { font-size: 24px; font-weight: 700; letter-spacing: 1px; }
+        .logo span { color: #00f2fe; }
+        .nav-links { list-style: none; display: flex; gap: 30px; }
+        .nav-links a { text-decoration: none; color: #a0a0a5; font-size: 16px; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #00f2fe; }
 
-.logo span {
-    color: #00f2fe; /* Tocco di colore cyan */
-}
+        /* Layout Principale */
+        .main-content {
+            margin-top: 120px;
+            padding: 0 8%;
+            margin-bottom: 100px;
+        }
 
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 30px;
-}
+        .page-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 60px;
+            background: linear-gradient(45deg, #ffffff, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.nav-links a {
-    text-decoration: none;
-    color: #a0a0a5;
-    font-size: 16px;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
+        /* Struttura a due colonne per ogni modello */
+        .model-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 70vh;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 60px 0;
+            gap: 5%;
+        }
 
-.nav-links a:hover, .nav-links a.active {
-    color: #00f2fe;
-}
+        /* Colonna di Sinistra: Testo */
+        .info-box {
+            width: 50%;
+        }
 
-/* Hero Section */
-.hero-section {
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    padding: 0 8%;
-}
+        .info-box h2 {
+            font-size: 2.2rem;
+            color: #00f2fe;
+            margin-bottom: 10px;
+        }
 
-/* Il contenitore del 3D occupa tutto lo sfondo della hero */
-#canvas-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
+        .info-box h3 {
+            font-size: 1rem;
+            color: #a0a0a5;
+            margin-bottom: 25px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-/* Testi sopra l'atomo 3D */
-.hero-content {
-    position: relative;
-    z-index: 2; /* Sopra il canvas */
-    max-width: 600px;
-    pointer-events: none; /* Permette di "cliccare attraverso" il testo per muovere l'atomo */
-}
+        .info-box p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #e0e0e5;
+            margin-bottom: 15px;
+            text-align: justify; /* Giustifica il testo come richiesto */
+        }
 
-.hero-content h1 {
-    font-size: 4rem;
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 20px;
-    background: linear-gradient(45deg, #ffffff, #00f2fe);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+        /* Colonna di Destra: Il Box 3D dell'atomo */
+        .atom-canvas-container {
+            width: 45%;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+        }
 
-.hero-content p {
-    font-size: 1.2rem;
-    color: #a0a0a5;
-    margin-bottom: 30px;
-}
-
-/* Bottone Interattivo */
-.btn {
-    pointer-events: auto; /* Riattiva i click sul bottone */
-    display: inline-block;
-    padding: 12px 30px;
-    background: linear-gradient(45deg, #00f2fe, #4facfe);
-    color: #000;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 50px;
-    box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 30px rgba(0, 242, 254, 0.7);
-}
-</style>
+        /* Responsive: sugli schermi piccoli impila testo sopra e atomo sotto */
+        @media (max-width: 900px) {
+            .model-section {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .info-box, .atom-canvas-container {
+                width: 100%;
+            }
+            .atom-canvas-container {
+                height: 300px;
+            }
+        }
+    </style>
 </head>
 <body>
 
     <nav class="navbar">
         <div class="logo">Atomos<span>.</span></div>
         <ul class="nav-links">
-            <li><a href="#" class="active">Home</a></li>
-            <li><a href="#">Modelli Storici</a></li>
+            <li><a href="#">Home</a></li>
+            <li><a href="#" class="active">Modelli Storici</a></li>
             <li><a href="#">Cronologia</a></li>
             <li><a href="#">Scienziati</a></li>
         </ul>
     </nav>
 
-    <header class="hero-section">
-        <div id="canvas-container"></div>
-        
-        <div class="hero-content">
-            <h1>La Storia dell'Atomo</h1>
-            <p>Un viaggio nel tempo dall'indivisibile di Democrito alla meccanica quantistica.</p>
-            <a href="#" class="btn">Esplora la Storia</a>
-        </div>
-    </header>
+    <main class="main-content">
+        <h1 class="page-title">L'Evoluzione dei Modelli Atomici</h1>
+
+        <section class="model-section">
+            <div class="info-box">
+                <h2>1. Il Modello di Dalton</h2>
+                <h3>1803 • La Sfera Indivisibile</h3>
+                <p>John Dalton recuperò l'antica idea filosofica di Democrito e la trasformò nella prima teoria scientifica dell'atomo. Per Dalton, l'atomo è una particella elementare, una sfera microscopica piena, massiccia, dura, impenetrabile e assolutamente indivisibile.</p>
+                <p>Pur essendo un modello estremamente elementare, spiegò perfettamente perché gli elementi chimici si combinano tra loro secondo proporzioni numeriche fisse e definite, dando vita alla chimica moderna.</p>
+            </div>
+            <div id="canvas-dalton" class="atom-canvas-container"></div>
+        </section>
+
+        <section class="model-section">
+            <div class="info-box">
+                <h2>2. Il Modello di Thomson</h2>
+                <h3>1904 • Il Modello a "Panettone"</h3>
+                <p>In seguito alla scoperta dell'elettrone (la prima particella subatomica carica negativamente), Joseph John Thomson dovette scardinare l'idea di Dalton. Se esistono frammenti più piccoli all'interno dell'atomo, esso non è indivisibile.</p>
+                <p>Thomson immaginò l'atomo come una sfera fluida di carica positiva diffusa ed omogenea, all'interno della quale erano immersi e distribuiti gli elettroni negativi in posizioni fisse, proprio come le uvette all'interno di un panettone inglese (Plum Pudding).</p>
+            </div>
+            <div id="canvas-thomson" class="atom-canvas-container"></div>
+        </section>
+
+        <section class="model-section">
+            <div class="info-box">
+                <h2>3. Il Modello di Rutherford</h2>
+                <h3>1911 • Il Modello Planetario</h3>
+                <p>Bombardando una sottilissima lamina d'oro con particelle alfa positive, Ernest Rutherford scoprì qualcosa di incredibile: la maggior parte delle particelle passava oltre senza ostacoli, ma alcune venivano deviate violentemente all'indietro.</p>
+                <p>Ne dedusse che l'atomo è quasi completamente vuoto. Tutta la massa e la carica positiva sono concentrate in un minuscolo centro densissimo chiamato nucleo, mentre gli elettroni vi orbitano attorno a grandissima distanza, proprio come i pianeti attorno al Sole.</p>
+            </div>
+            <div id="canvas-rutherford" class="atom-canvas-container"></div>
+        </section>
+
+        <section class="model-section">
+            <div class="info-box">
+                <h2>4. Il Modello di Bohr</h2>
+                <h3>1913 • Le Orbite Quantizzate</h3>
+                <p>Il modello di Rutherford aveva un difetto fisico fatale: secondo le leggi classiche, gli elettroni orbitando avrebbero dovuto perdere energia e collassare sul nucleo in pochi istanti. Niels Bohr risolse il paradosso applicando le neonate teorie quantistiche.</p>
+                <p>Bohr teorizzò che gli elettroni si muovono solo su orbite circolari precise a distanze fisse (quantizzate) dal nucleo, senza emettere energia. Gli elettroni possono emettere o assorbire energia solo saltando istantaneamente da un'orbita all'altra.</p>
+            </div>
+            <div id="canvas-bohr" class="atom-canvas-container"></div>
+        </section>
+
+        <section class="model-section">
+            <div class="info-box">
+                <h2>5. Il Modello di Schrödinger</h2>
+                <h3>1926 • Il Modello Meccanico Quantistico</h3>
+                <p>Abbandonata l'idea di traiettorie rigide e deterministiche, Erwin Schrödinger descrisse il comportamento dell'elettrone usando un'equazione d'onda differenziale. L'elettrone non è più una sferetta localizzabile, ma manifesta proprietà ondulatorie.</p>
+                <p>Il concetto di orbita viene sostituito da quello di orbitale: una "nuvola di probabilità" tridimensionale che pulsa nello spazio. Più la nuvola è luminosa e densa in una zona, più è alta la probabilità matematica di intercettare l'elettrone al suo interno.</p>
+            </div>
+            <div id="canvas-schrodinger" class="atom-canvas-container"></div>
+        </section>
+    </main>
 
     <script>
 // =========================================================================
-// CONFIGURAZIONE SCENA, TELECAMERA E RENDERIZZATORE
+// FUNZIONE DI SUPPORTO PER CONFIGURARE UN APPARATO 3D IN UN CONTENITORE SPECIFICO
 // =========================================================================
-const container = document.getElementById('canvas-container');
-const scene = new THREE.Scene();
+function setupAtomEngine(containerId) {
+    const container = document.getElementById(containerId);
+    const width = container.clientWidth;
+    const height = container.clientHeight;
 
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.z = 10; 
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+    camera.position.z = 6;
 
-const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-container.appendChild(renderer.domElement);
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
 
-// Gruppo principale che conterrà tutto l'atomo (permettendo la rotazione con il mouse)
-const atomGroup = new THREE.Group();
-scene.add(atomGroup);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
 
-// =========================================================================
-// 1. ILLUMINAZIONE (Necessaria per dare volume 3D)
-// =========================================================================
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-scene.add(ambientLight);
+    const dirLight = new THREE.DirectionalLight(0x00f2fe, 1.5);
+    dirLight.position.set(5, 5, 5);
+    scene.add(dirLight);
 
-const dirLight1 = new THREE.DirectionalLight(0x00f2fe, 1.5);
-dirLight1.position.set(5, 5, 5);
-scene.add(dirLight1);
+    // Gestione ridimensionamento per i singoli box
+    window.addEventListener('resize', () => {
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+    });
 
-const dirLight2 = new THREE.DirectionalLight(0xff00ff, 1);
-dirLight2.position.set(-5, -5, 3);
-scene.add(dirLight2);
-
-// =========================================================================
-// 2. IL NUCLEO COPOSTO (Protoni e Neutroni)
-// =========================================================================
-const nucleusGroup = new THREE.Group();
-atomGroup.add(nucleusGroup);
-
-const sphereGeo = new THREE.SphereGeometry(0.3, 16, 16);
-const protonMat = new THREE.MeshPhongMaterial({ color: 0xff007f, shininess: 100 });
-const neutronMat = new THREE.MeshPhongMaterial({ color: 0x007fff, shininess: 100 });
-
-// Generiamo un agglomerato di sferette per fare un vero nucleo
-const particleCount = 12;
-for (let i = 0; i < particleCount; i++) {
-    const isProton = i % 2 === 0;
-    const mesh = new THREE.Mesh(sphereGeo, isProton ? protonMat : neutronMat);
-    
-    // Posiziona le sferette vicine al centro in modo casuale
-    mesh.position.set(
-        (Math.random() - 0.5) * 0.6,
-        (Math.random() - 0.5) * 0.6,
-        (Math.random() - 0.5) * 0.6
-    );
-    nucleusGroup.add(mesh);
+    return { scene, camera, renderer };
 }
 
-// =========================================================================
-// 3. ORBITE ED ELETRONI
-// =========================================================================
-const orbitsData = [
-    { radius: 3.5, tiltX: 0.5, tiltY: 0.8, speed: 2.5, color: 0x00f2fe },
-    { radius: 4.2, tiltX: -0.6, tiltY: -0.4, speed: 1.8, color: 0x00f2fe },
-    { radius: 4.8, tiltX: 0.2, tiltY: -0.9, speed: 3.0, color: 0x00f2fe }
-];
-
-const electrons = [];
-const orbitLines = [];
-
-orbitsData.forEach(data => {
-    // Creazione anello dell'orbita
-    const orbitGeo = new THREE.RingGeometry(data.radius, data.radius + 0.03, 64);
-    const orbitMat = new THREE.MeshBasicMaterial({ 
-        color: 0xffffff, 
-        side: THREE.DoubleSide,
-        transparent: true,
-        opacity: 0.15
+// FUNZIONE TRUCCO PER PARTICELLE A CERCHI PERFETTI
+function createCircleMaterial(color, size, opacity) {
+    const mat = new THREE.PointsMaterial({
+        color: color, size: size, transparent: true, opacity: opacity, blending: THREE.AdditiveBlending, depthWrite: false
     });
-    const orbit = new THREE.Mesh(orbitGeo, orbitMat);
-    
-    // Applica inclinazione dell'orbita
-    orbit.rotation.x = data.tiltX;
-    orbit.rotation.y = data.tiltY;
-    atomGroup.add(orbit);
-    orbitLines.push(orbit);
+    mat.onBeforeCompile = (shader) => {
+        shader.fragmentShader = shader.fragmentShader.replace('void main() {',
+            `void main() { vec2 coord = gl_PointCoord - vec2(0.5); float dist = length(coord); if (dist > 0.5) discard; float alpha = smoothstep(0.5, 0.1, dist);`
+        );
+        shader.fragmentShader = shader.fragmentShader.replace('gl_FragColor = vec4( diffuse, opacity );', 'gl_FragColor = vec4( diffuse, opacity * alpha );');
+    };
+    return mat;
+}
 
-    // Creazione Elettrone (Sfera luminosa)
-    const electronGeo = new THREE.SphereGeometry(0.15, 16, 16);
-    const electronMat = new THREE.MeshPhongMaterial({ 
-        color: 0x00f2fe, 
-        emissive: 0x00f2fe,
-        emissiveIntensity: 0.8 
-    });
-    const electron = new THREE.Mesh(electronGeo, electronMat);
-    atomGroup.add(electron);
-
-    // Salviamo i dati per muoverli nell'animate loop
-    electrons.push({
-        mesh: electron,
-        radius: data.radius,
-        tiltX: data.tiltX,
-        tiltY: data.tiltY,
-        speed: data.speed,
-        angle: Math.random() * Math.PI * 2 // Partenza casuale
-    });
-});
-
-// =========================================================================
-// 4. INTERATTIVITÀ MOUSE (Effetto Parallasse)
-// =========================================================================
-let mouseX = 0;
-let mouseY = 0;
-let targetX = 0;
-let targetY = 0;
-
-window.addEventListener('mousemove', (event) => {
-    // Normalizza le coordinate del mouse (-1 a 1)
-    mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-    mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-});
-
-// =========================================================================
-// 5. LOOP DI ANIMAZIONE
-// =========================================================================
 const clock = new THREE.Clock();
 
-function animate() {
-    requestAnimationFrame(animate);
-    const delta = clock.getDelta();
-    const elapsedTime = clock.getElapsedTime();
+// =========================================================================
+// INIZIALIZZAZIONE INDIPENDENTE DEI 5 ATOMI
+// =========================================================================
 
-    // 1. Fai vibrare leggermente il nucleo per dare energia
-    nucleusGroup.rotation.x += 0.01;
-    nucleusGroup.rotation.y += 0.01;
-    nucleusGroup.children.forEach((child, index) => {
-        child.position.x += Math.sin(elapsedTime * 5 + index) * 0.002;
-        child.position.y += Math.cos(elapsedTime * 5 + index) * 0.002;
-    });
+// --- 1. MODELLO DI DALTON ---
+const d3d = setupAtomEngine('canvas-dalton');
+const daltonMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(1.4, 32, 32),
+    new THREE.MeshPhongMaterial({ color: 0x4a4e69, roughness: 0.8, metalness: 0.2 })
+);
+d3d.scene.add(daltonMesh);
 
-    // 2. Muovi gli elettroni lungo le loro orbite inclinate
-    electrons.forEach(el => {
-        el.angle += el.speed * delta; // Avanzamento basato sul tempo reale
+// --- 2. MODELLO DI THOMSON ---
+const t3d = setupAtomEngine('canvas-thomson');
+const thomsonGroup = new THREE.Group();
+t3d.scene.add(thomsonGroup);
 
-        // Calcolo posizione 2D sull'orbita piatta
-        let x = Math.cos(el.angle) * el.radius;
-        let y = Math.sin(el.angle) * el.radius;
-        let z = 0;
+const pudding = new THREE.Mesh(
+    new THREE.SphereGeometry(1.5, 32, 32),
+    new THREE.MeshPhongMaterial({ color: 0xff0055, transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending })
+);
+thomsonGroup.add(pudding);
 
-        // Creiamo un vettore 3D e applichiamo le stesse rotazioni dell'orbita madre
-        const pos = new THREE.Vector3(x, y, z);
-        pos.applyAxisAngle(new THREE.Vector3(1, 0, 0), el.tiltX);
-        pos.applyAxisAngle(new THREE.Vector3(0, 1, 0), el.tiltY);
-
-        el.mesh.position.copy(pos);
-    });
-
-    // 3. Rotazione fluida dell'intero atomo in base al mouse
-    targetX = mouseX * 0.5;
-    targetY = mouseY * 0.5;
-
-    atomGroup.rotation.y += (targetX - atomGroup.rotation.y) * 0.05;
-    atomGroup.rotation.x += (targetY - atomGroup.rotation.x) * 0.05;
-
-    // Rotazione automatica di sottofondo costante minima
-    atomGroup.rotation.y += 0.002;
-
-    renderer.render(scene, camera);
+const electronGeo = new THREE.SphereGeometry(0.1, 16, 16);
+const electronMat = new THREE.MeshPhongMaterial({ color: 0x00f2fe, emissive: 0x00f2fe, emissiveIntensity: 0.5 });
+for (let i = 0; i < 12; i++) {
+    const el = new THREE.Mesh(electronGeo, electronMat);
+    const u = Math.random(); const v = Math.random(); const theta = u * 2 * Math.PI; const phi = Math.acos(2 * v - 1); const r = Math.random() * 1.1;
+    el.position.set(r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi));
+    thomsonGroup.add(el);
 }
 
-animate();
+// --- 3. MODELLO DI RUTHERFORD ---
+const r3d = setupAtomEngine('canvas-rutherford');
+const ruthGroup = new THREE.Group();
+r3d.scene.add(ruthGroup);
+
+const ruthNucleus = new THREE.Mesh(new THREE.IcosahedronGeometry(0.18, 2), new THREE.MeshPhongMaterial({ color: 0xff00ff }));
+ruthGroup.add(ruthNucleus);
+
+const createOrbitLine = (radiusX, radiusY, rotX, rotY) => {
+    const points = [];
+    for(let i=0; i<=100; i++) { const t = (i/100)*Math.PI*2; points.push(new THREE.Vector3(Math.cos(t)*radiusX, Math.sin(t)*radiusY, 0)); }
+    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial({ color: 0xffffff, transparent:true, opacity:0.15 }));
+    line.rotation.x = rotX; line.rotation.y = rotY;
+    return line;
+};
+ruthGroup.add(createOrbitLine(1.8, 0.7, 0.6, 0.4), createOrbitLine(1.8, 0.7, -0.6, 1.2), createOrbitLine(1.8, 0.7, 1.4, -0.2));
+const re1 = new THREE.Mesh(electronGeo, electronMat); const re2 = new THREE.Mesh(electronGeo, electronMat);
+ruthGroup.add(re1, re2);
+
+// --- 4. MODELLO DI BOHR ---
+const b3d = setupAtomEngine('canvas-bohr');
+const bohrGroup = new THREE.Group();
+b3d.scene.add(bohrGroup);
+
+const bohrNucleus = new THREE.Mesh(new THREE.IcosahedronGeometry(0.2, 2), new THREE.MeshPhongMaterial({ color: 0xff00ff }));
+bohrGroup.add(bohrNucleus);
+
+const bO1 = new THREE.Mesh(new THREE.RingGeometry(1.0, 1.02, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
+const bO2 = new THREE.Mesh(new THREE.RingGeometry(1.6, 1.62, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
+const bO3 = new THREE.Mesh(new THREE.RingGeometry(2.2, 2.22, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
+bO1.rotation.x = bO2.rotation.x = bO3.rotation.x = Math.PI / 2.5;
+bohrGroup.add(bO1, bO2, bO3);
+
+const be1 = new THREE.Mesh(electronGeo, electronMat); const be2 = new THREE.Mesh(electronGeo, electronMat); const be3 = new THREE.Mesh(electronGeo, electronMat);
+bohrGroup.add(be1, be2, be3);
+
+// --- 5. MODELLO DI SCHRÖDINGER ---
+const s3d = setupAtomEngine('canvas-schrodinger');
+const schroGroup = new THREE.Group();
+s3d.scene.add(schroGroup);
+
+const schroNucleus = new THREE.Mesh(new THREE.IcosahedronGeometry(0.15, 2), new THREE.MeshPhongMaterial({ color: 0xff00ff }));
+schroGroup.add(schroNucleus);
+
+const qCount = 1500;
+const qGeometry = new THREE.BufferGeometry();
+const qPositions = new Float32Array(qCount * 3);
+for (let i = 0; i < qCount; i++) {
+    const theta = Math.random() * Math.PI * 2; const phi = Math.acos((Math.random() * 2) - 1);
+    const r = Math.pow(Math.random(), 2.5) * 1.6 + 0.1;
+    qPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta); qPositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta); qPositions[i * 3 + 2] = r * Math.cos(phi);
+}
+qGeometry.setAttribute('position', new THREE.BufferAttribute(qPositions, 3));
+const qCloud = new THREE.Points(qGeometry, createCircleMaterial(0x00f2fe, 0.1, 0.7));
+schroGroup.add(qCloud);
+
 
 // =========================================================================
-// 6. GESTIONE RESPONSIVE
+// ANIMATION LOOP UNIFICATO
 // =========================================================================
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-});
-    </script>
+function animate() {
+    requestAnimationFrame(animate);
+    const time = clock.getElapsedTime();
+
+    // Dalton
+    daltonMesh.rotation.y = time * 0.3;
+    d3d.renderer.render(d3d.scene, d3d.camera);
+
+    // Thomson
+    thomsonGroup.rotation.y = time * 0.2;
+    pudding.scale.setScalar(1 + Math.sin(time * 2) * 0.03);
+    t3d.renderer.render(t3d.scene, t3d.camera);
+
+    // Rutherford
+    ruthGroup.rotation.y = time * 0.05;
+    const posE1 = new THREE.Vector3(Math.cos(time * 3.5) * 1.8, Math.sin(time * 3.5) * 0.7, 0).applyAxisAngle(new THREE.Vector3(1,0,0), 0.6).applyAxisAngle(new THREE.Vector3(0,1,0), 0.4);
+    const posE2 = new THREE.Vector3(Math.cos(time * 2.8) * 1.8, Math.sin(time * 2.8) * 0.7, 0).applyAxisAngle(new THREE.Vector3(1,0,0), -0.6).applyAxisAngle(new THREE.Vector3(0,1,0), 1.2);
+    re1.position.copy(posE1); re2.position.copy(posE2);
+    r3d.renderer.render(r3d.scene, r3d.camera);
+
+    // Bohr
+    bohrGroup.rotation.y = time * 0.03;
+    const posB1 = new THREE.Vector3(Math.cos(time * 4) * 1.0, 0, Math.sin(time * 4) * 1.0).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
+    const posB2 = new THREE.Vector3(Math.cos(time * 2.5) * 1.6, 0, Math.sin(time * 2.5) * 1.6).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
+    const posB3 = new THREE.Vector3(Math.cos(time * 1.8) * 2.2, 0, Math.sin(time * 1.8) * 2.2).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
+    be1.position.copy(posB1); be2.position.copy(posB2); be3.position.copy(posB3);
+    b3d.renderer.render(b3d.scene, b3d.camera);
+
+    // Schrödinger
+    qCloud.rotation.y = time * 0.08;
+    qCloud.rotation.z = Math.sin(time * 0.3) * 0.1;
+    s3d.renderer.render(s3d.scene, s3d.camera);
+}
+animate();
+</script>
 </body>
 </html>
