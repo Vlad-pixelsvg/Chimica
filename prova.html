@@ -6,7 +6,7 @@
     <title>Atomic History - L'Evoluzione dell'Atomo</title>
     <style>
         /* ==========================================================================
-           RESET E FONT (Dallo stile memorizzato)
+           RESET E FONT
            ========================================================================== */
         * {
             margin: 0;
@@ -23,7 +23,7 @@
         }
 
         /* ==========================================================================
-           NAV BAR MODERNA (Dallo stile memorizzato)
+           NAV BAR MODERNA
            ========================================================================== */
         .navbar {
             position: fixed;
@@ -69,7 +69,7 @@
         }
 
         /* ==========================================================================
-           HERO SECTION (Dallo stile memorizzato)
+           HERO SECTION
            ========================================================================== */
         .hero-section {
             position: relative;
@@ -131,7 +131,7 @@
         }
 
         /* ==========================================================================
-           STRUTTURA TIMELINE E CONTENUTI (Dal CSS di integrazione)
+           STRUTTURA TIMELINE E CONTENUTI
            ========================================================================== */
         section {
             min-height: 100vh;
@@ -177,9 +177,9 @@
             font-style: italic;
         }
 
-        ul {
-            list-style-type: none;
+        ul, ol {
             margin-bottom: 20px;
+            padding-left: 20px;
         }
 
         li {
@@ -187,18 +187,15 @@
             line-height: 1.6;
             color: #a0a0a5;
             margin-bottom: 12px;
-            position: relative;
-            padding-left: 20px;
         }
 
-        li::before {
-            content: "•";
+        strong {
+            color: #ffffff;
+        }
+
+        .highlight {
             color: #00f2fe;
-            font-weight: bold;
-            display: inline-block;
-            width: 1em;
-            margin-left: -1em;
-            position: absolute;
+            font-weight: 600;
         }
 
         /* Tabelle strutturate */
@@ -230,14 +227,64 @@
             color: #a0a0a5;
         }
 
-        strong {
-            color: #ffffff;
+        /* ==========================================================================
+           ELEMENTI INTERATTIVI AUMENTATI (NUOVI)
+           ========================================================================== */
+        .interactive-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(0, 242, 254, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 35px 0;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.03);
         }
 
-        /* Evidenziatori Cyber */
-        .highlight {
+        .interactive-box canvas {
+            background: #0f0f13;
+            border-radius: 8px;
+            max-width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: crosshair;
+            margin-top: 15px;
+        }
+
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn-interactive {
+            background: transparent;
+            border: 1px solid #00f2fe;
             color: #00f2fe;
+            padding: 10px 22px;
+            cursor: pointer;
             font-weight: 600;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-interactive:hover {
+            background: #00f2fe;
+            color: #000;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .quantum-flash {
+            font-weight: bold;
+            transition: color 0.4s ease;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            align-items: center;
+            margin-top: 15px;
         }
     </style>
 </head>
@@ -257,7 +304,6 @@
 
     <section id="hero" class="hero-section">
         <div id="canvas-container"></div>
-        
         <div class="hero-content">
             <h1>L'Evoluzione dell'Atomo</h1>
             <p>Un viaggio scientifico e filosofico attraverso i secoli: dalla pura speculazione concettuale all'infinitamente piccolo regolato dalla probabilità quantistica.</p>
@@ -316,14 +362,20 @@
             <h2>3. La Scoperta del Nucleo: Il Modello di Rutherford</h2>
             
             <h3>L'Esperimento della Lamina d'Oro (1910-1911)</h3>
-            <p>Nel 1910, lo scienziato neozelandese <span class="highlight">Ernest Rutherford</span>, insieme ai suoi collaboratori Geiger e Marsden, eseguì un esperimento cruciale per testare la validità del modello di Thomson. Bombardò una sottilissima lamina d'oro (dello spessore di poche centinaia di atomi) con un fascio di particelle &alpha; (nuclei di elio veloci e carichi positivamente), posizionando uno schermo al solfuro di zinco tutt'intorno per rilevare gli impatti.</p>
+            <p>Nel 1910, lo scienziato neozelandese <span class="highlight">Ernest Rutherford</span>, insieme ai suoi collaboratori Geiger e Marsden, eseguì un esperimento cruciale per testare la validità del modello di Thomson. Bombardò una sottilissima lamina d'oro con un fascio di particelle &alpha; (nuclei di elio veloci e carichi positivamente), posizionando uno schermo al solfuro di zinco tutt'intorno per rilevare gli impatti.</p>
             <p>I risultati scardinarono le aspettative dell'epoca:</p>
             <ol>
                 <li>La stragrande maggioranza delle particelle &alpha; (circa il 99%) attraversava la lamina dritta, come se lo spazio fosse vuoto.</li>
                 <li>Una piccolissima percentuale subiva vistose deviazioni angolari.</li>
                 <li>Circa 1 particella su 8000 veniva <strong>rimbalzata all'indietro</strong> con violenza.</li>
             </ol>
-            <p>Se il modello di Thomson fosse stato corretto, la carica positiva diffusa non avrebbe mai potuto generare una repulsione elettrostatica così concentrata da respingere le particelle &alpha;. Rutherford commentò: <em>"Fu l'evento più incredibile della mia vita, come se sparassi un proiettile da 15 pollici contro un foglio di carta velina e questo tornasse indietro a colpirti"</em>.</p>
+            <p>Rutherford commentò: <em>"Fu l'evento più incredibile della mia vita, come se sparassi un proiettile da 15 pollici contro un foglio di carta velina e questo tornasse indietro a colpirti"</em>.</p>
+
+            <div class="interactive-box">
+                <h3>Laboratorio Virtuale: L'Esperimento di Rutherford</h3>
+                <p>Muovi il mouse sopra il pannello per variare l'altezza del fascio alfa (&alpha;). Nota come la traiettoria devia o rimbalza solo se si punta direttamente al minuscolo nucleo centrale.</p>
+                <canvas id="rutherfordCanvas" width="600" height="300"></canvas>
+            </div>
 
             <h3>Il Modello Planetario (1911)</h3>
             <p>Rutherford demolì l'idea dell'atomo pieno e formulò il <strong>modello planetario</strong>:</p>
@@ -339,16 +391,33 @@
             <h2>4. Il Paradosso Elettrodinamico e l'Atomo Quantizzato</h2>
             
             <h3>La Crisi del Modello Planetario</h3>
-            <p>Il modello di Rutherford, pur brillantissimo, violava clamorosamente le leggi della Fisica Classica (Elettrodinamica di Maxwell). Secondo la fisica classica, una carica elettrica (l'elettrone) soggetta a un'accelerazione (come l'accelerazione centripeta del moto circolare) deve irradiare continuamente onde elettromagnetiche, perdendo energia. Perdendo progressivamente energia cinematica, l'elettrone avrebbe dovuto descrivere una traiettoria a spirale sempre più stretta, fino a <strong>collassare sul nucleo</strong> in meno di un milionesimo di secondo. La materia stagna sarebbe dovuta scomparire.</p>
-            <p>Per superare l'impasse, fu necessario applicare le nascenti leggi della meccanica quantistica e lo studio degli <strong>spettri atomici a righe</strong> (la prova che gli atomi emettono luce solo a frequenze specifiche e non continue). Nel 1900, <span class="highlight">Max Planck</span> aveva già introdotto il concetto che l'energia non è continua, ma viene scambiata in "pacchetti" discreti detti quanti ($E = h\nu$).</p>
+            <p>Il modello di Rutherford violava le leggi della Fisica Classica. Secondo l'Elettrodinamica di Maxwell, una carica in moto circolare accelerato deve irradiare continuamente energia sotto forma di onde elettromagnetiche. Perdendo progressivamente energia, l'elettrone avrebbe dovuto descrivere una spirale fino a <strong>collassare sul nucleo</strong> in una frazione di secondo. La materia non sarebbe stata stabile.</p>
+            <p>Nel 1900, <span class="highlight">Max Planck</span> aveva introdotto il concetto che l'energia viene scambiata in "pacchetti" discreti detti quanti ($E = h\nu$). Questa impostazione fu la chiave per interpretare gli <strong>spettri atomici a righe</strong>.</p>
 
             <h3>L'Atomo Quantizzato di Bohr-Sommerfeld (1913)</h3>
-            <p>Il fisico danese <span class="highlight">Niels Bohr</span> applicò la quantizzazione di Planck al modello planetario di Rutherford, introducendo tre postulati:</p>
+            <p>Il fisico danese <span class="highlight">Niels Bohr</span> applicò la quantizzazione al modello planetario introducendo tre postulati:</p>
             <ol>
-                <li><strong>Orbite Stazionarie:</strong> Gli elettroni ruotano attorno al nucleo solo su determinate orbite circolari permesse, caratterizzate da un momento angolare quantizzato. Quando l'elettrone si trova in una di queste orbite, <strong>non irradia energia</strong> e l'atomo è stabile.</li>
-                <li><strong>Stato Fondamentale ed Eccitato:</strong> L'orbita a minor energia è detta <em>stato fondamentale</em>. Se l'atomo riceve energia dall'esterno, l'elettrone può compiere un <strong>salto quantico</strong> verso un'orbita a energia maggiore (<em>stato eccitato</em>).</li>
-                <li><strong>Emissioni di Fotoni:</strong> Quando l'elettrone ritorna a un'orbita inferiore, emette un singolo fotone la cui energia è esattamente pari alla differenza energetica tra le due orbite ($\Delta E = E_2 - E_1 = h\nu$). Questo spiegò matematicamente le righe degli spettri di emissione dell'idrogeno.</li>
+                <li><strong>Orbite Stazionarie:</strong> Gli elettroni ruotano attorno al nucleo solo su determinate orbite permesse. In queste orbite, <strong>non irradiano energia</strong> e l'atomo resta stabile.</li>
+                <li><strong>Stato Fondamentale ed Eccitato:</strong> L'orbita a minor energia è lo <em>stato fondamentale</em>. Assorbendo energia, l'elettrone esegue un <strong>salto quantico</strong> verso un'orbita esterna (<em>stato eccitato</em>).</li>
+                <li><strong>Emissioni di Fotoni:</strong> Quando l'elettrone ricade su un'orbita inferiore, rilascia un fotone di energia pari alla differenza energetica dei due livelli ($\Delta E = E_2 - E_1 = h\nu$).</li>
             </ol>
+
+            <div class="interactive-box">
+                <h3>Laboratorio Virtuale: Il Salto Quantico di Bohr</h3>
+                <p>Usa i pulsanti per eccitare l'elettrone fornendo energia o per farlo rilassare. Osserva l'emissione del fotone luminoso quando scende di livello.</p>
+                <div class="flex-container">
+                    <canvas id="bohrCanvas" width="300" height="300"></canvas>
+                    <div>
+                        <div class="controls">
+                            <button class="btn-interactive" id="btnExcite">Fornisci Energia (+h&nu;)</button>
+                            <button class="btn-interactive" id="btnRelax">Rilassa Elettrone (-h&nu;)</button>
+                        </div>
+                        <p style="margin-top: 25px;">Livello energetico: <span id="quantumState" class="highlight">Stato Fondamentale (n=1)</span></p>
+                        <p>Radiazione: <span id="photonEmit" class="quantum-flash" style="color: #555;">Nessuna emissione</span></p>
+                    </div>
+                </div>
+            </div>
+
             <p>Successivamente, <span class="highlight">Arnold Sommerfeld</span> perfezionò il modello introducendo le <strong>orbite ellittiche</strong> e nuovi numeri quantici per spiegare la struttura fine degli spettri degli atomi più complessi.</p>
         </div>
     </section>
@@ -358,15 +427,15 @@
             <h2>5. La Rivoluzione Ondulatoria e il Modello Contemporaneo</h2>
             
             <h3>La Demolizione del Determinismo</h3>
-            <p>Il modello di Bohr-Sommerfeld falliva nel calcolare gli spettri degli atomi multielettronici. Tra il 1924 e il 1927, tre scoperte scardinarono definitivamente la fisica deterministica:</p>
+            <p>Il modello di Bohr falliva nel calcolare gli spettri degli atomi multielettronici. Tra il 1924 e il 1927, tre scoperte scardinarono definitivamente la fisica classica:</p>
             <ul>
-                <li><strong>Dualismo Onda-Particella (Louis de Broglie, 1924):</strong> Ciascuna particella in movimento, compreso l'elettrone, possiede una duplice natura: si comporta sia come corpuscolo sia come un'<strong>onda elettromagnetica</strong> associata, la cui lunghezza d'onda è $\lambda = h/mv$.</li>
-                <li><strong>Principio di Indeterminazione (Werner Heisenberg, 1927):</strong> È intrinsecamente impossibile conoscere contemporaneamente, e con precisione assoluta, sia la posizione ($x$) sia la quantità di moto ($p$) di una particella subatomica ($\Delta x \cdot \Delta p \ge h/4\pi$). Il concetto di "orbita geometrica definita" cessa di esistere.</li>
-                <li><strong>L'Equazione di Schrödinger (Erwin Schrödinger, 1926):</strong> Formulò un'equazione differenziale d'onda che descrive il comportamento dell'elettrone non come un punto rigido nello spazio, ma come una funzione d'onda ($\Psi$) nello spazio tridimensionale.</li>
+                <li><strong>Dualismo Onda-Particella (Louis de Broglie, 1924):</strong> L'elettrone possiede una duplice natura: si comporta sia come corpuscolo sia come un'<strong>onda elettromagnetica</strong> associata ($\lambda = h/mv$).</li>
+                <li><strong>Principio di Indeterminazione (Werner Heisenberg, 1927):</strong> È impossibile conoscere contemporaneamente e con precisione assoluta sia la posizione ($x$) sia la quantità di moto ($p$) di una particella subatomica ($\Delta x \cdot \Delta p \ge h/4\pi$). Le orbite geometriche precise non esistono più.</li>
+                <li><strong>L'Equazione di Schrödinger (Erwin Schrödinger, 1926):</strong> Un'equazione differenziale che descrive il comportamento dell'elettrone tramite una funzione d'onda ($\Psi$) nello spazio tridimensionale.</li>
             </ul>
 
             <h3>L'Atomo Moderno: Il Modello a Orbitali</h3>
-            <p>Il modello contemporaneo (modello probabilistico o della meccanica ondulatoria) ridefinisce completamente la struttura atomica. Il termine "orbita" viene sostituito da <span class="highlight">Orbitale</span>. L'orbitale non è una traiettoria geometrica, ma una <strong>regione di spazio</strong> intorno al nucleo in cui la probabilità di trovare l'elettrone è massima (convenzionalmente fissata al <strong>95%</strong> del tempo, calcolata tramite il quadrato della funzione d'onda $|\Psi|^2$). L'atomo appare oggi come un nucleo circondato da una <strong>nube elettronica</strong> a densità variabile.</p>
+            <p>Il termine "orbita" viene sostituito da <span class="highlight">Orbitale</span>. L'orbitale è una <strong>regione di spazio</strong> intorno al nucleo in cui la probabilità di trovare l'elettrone è massima (pari al <strong>95%</strong>, calcolata tramite il quadrato della funzione d'onda $|\Psi|^2$). L'atomo appare oggi come un nucleo circondato da una <strong>nube elettronica</strong> a densità variabile.</p>
 
             <h3>La Struttura Subatomica Definitiva</h3>
             <p>L'atomo nella sua condizione standard (neutra) è composto da tre particelle fondamentali stabili:</p>
@@ -404,17 +473,18 @@
 
             <h3>Grandezze Chiave dell'Atomo</h3>
             <ul>
-                <li><strong>Numero Atomico ($Z$):</strong> Rappresenta il numero totale di protoni presenti nel nucleo. È il parametro fondamentale che definisce l'elemento chimico e ne determina interamente le proprietà chimiche e la posizione nella tavola periodica.</li>
-                <li><strong>Numero di Massa ($A$):** Indica la somma complessiva di protoni e neutroni (chiamati collettivamente *nucleoni*) presenti nel nucleo.</li>
-                <li><strong>Isotopi:</strong> Atomi che presentano lo stesso Numero Atomico ($Z$) ma un differente Numero di Massa ($A$), ovvero con un diverso numero di neutroni nel nucleo (es. <em>Prozio</em>, <em>Deuterio</em> e <em>Trizio</em> per l'idrogeno).</li>
-                <li><strong>Ioni:</strong> Atomi che hanno perso la loro neutralità elettrica originaria a causa di una differenza tra il numero di elettroni e quello di protoni (<em>Cationi</em> se positivi, <em>Anioni</em> se negativi).</li>
-                <li><strong>I Quark:</strong> La fisica moderna ha infine dimostrato che i protoni e i neutroni stazionari nel nucleo non sono particelle elementari indivisibili, ma sono a loro volta composti da triplette di particelle ancora più fondamentali chiamate quark.</li>
-                <li><strong>Lo Stato di Plasma:</strong> A valori di temperatura e pressione estremamente elevati l'esistenza dell'atomo neutro non è possibile, determinandosi lo stato di plasma, in cui i nuclei e gli elettroni sono completamente separati.</li>
+                <li><strong>Numero Atomico ($Z$):</strong> Il numero totale di protoni nel nucleo. Definisce l'elemento chimico e la sua posizione nella tavola periodica.</li>
+                <li><strong>Numero di Massa ($A$):</strong> La somma complessiva di protoni e neutroni (chiamati collettivamente <em>nucleoni</em>) nel nucleo.</li>
+                <li><strong>Isotopi:</strong> Atomi con lo stesso Numero Atomico ($Z$) ma differente Numero di Massa ($A$), ovvero con diverso numero di neutroni (es. Prozio, Deuterio e Trizio per l'idrogeno).</li>
+                <li><strong>Ioni:</strong> Atomi carichi elettricamente per via di una perdita o guadagno di elettroni rispetto ai protoni (Cationi se positivi, Anioni se negativi).</li>
+                <li><strong>I Quark:</strong> Protoni e neutroni non sono particelle elementari, ma sono costituiti da triplette di entità substrutturali denominate quark.</li>
+                <li><strong>Lo Stato di Plasma:</strong> Ad altissime temperature e pressioni gli elettroni si separano completamente dai nuclei, generando il quarto stato della materia.</li>
             </ul>
         </div>
     </section>
 
     <script>
+        // --- Gestione Active Link su Scroll ---
         const sections = document.querySelectorAll('section');
         const navLinks = document.querySelectorAll('.nav-links a');
 
@@ -423,7 +493,7 @@
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
                 const sectionHeight = section.clientHeight;
-                if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                if (window.pageYOffset >= (sectionTop - sectionHeight / 3)) {
                     current = section.getAttribute('id');
                 }
             });
@@ -435,6 +505,155 @@
                 }
             });
         });
+
+        // ==========================================
+        // ANIMAZIONE CODICE: SIMULATORE RUTHERFORD (FASE 3)
+        // ==========================================
+        const ruthCanvas = document.getElementById('rutherfordCanvas');
+        const ruthCtx = ruthCanvas.getContext('2d');
+        let mouseY = ruthCanvas.height / 2;
+
+        ruthCanvas.addEventListener('mousemove', (e) => {
+            const rect = ruthCanvas.getBoundingClientRect();
+            // Ottimizzazione per display retina o ridimensionamenti
+            mouseY = (e.clientY - rect.top) * (ruthCanvas.height / rect.height);
+        });
+
+        function drawRutherford() {
+            ruthCtx.clearRect(0, 0, ruthCanvas.width, ruthCanvas.height);
+            
+            // Core del Nucleo d'Oro
+            const nX = ruthCanvas.width / 2;
+            const nY = ruthCanvas.height / 2;
+            
+            ruthCtx.beginPath();
+            ruthCtx.arc(nX, nY, 14, 0, Math.PI * 2);
+            ruthCtx.fillStyle = '#ffd700';
+            ruthCtx.shadowBlur = 20;
+            ruthCtx.shadowColor = '#ffd700';
+            ruthCtx.fill();
+            ruthCtx.shadowBlur = 0; 
+            
+            // Disegno del raggio incidente
+            ruthCtx.beginPath();
+            ruthCtx.strokeStyle = '#00f2fe';
+            ruthCtx.lineWidth = 3;
+            ruthCtx.moveTo(0, mouseY);
+            
+            let collided = false;
+            
+            for(let x = 0; x < ruthCanvas.width; x++) {
+                let dx = x - nX;
+                let dy = mouseY - nY;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                
+                let yPos = mouseY;
+                
+                // Deviazione elettrostatica (Modello di Coulomb simulato)
+                if (distance < 75) {
+                    let force = (75 - distance) * 0.85;
+                    yPos = mouseY + (dy < 0 ? -force : force);
+                    
+                    // Condizione d'urto frontale (Rimbalzo retrogrado)
+                    if(Math.abs(dy) < 6 && x > nX - 15) {
+                        collided = true;
+                        ruthCtx.lineTo(nX - 12, nY);
+                        ruthCtx.lineTo(0, nY + (mouseY < nY ? 50 : -50));
+                        break;
+                    }
+                }
+                if(!collided) ruthCtx.lineTo(x, yPos);
+            }
+            ruthCtx.stroke();
+            
+            // UI info testuale sul Canvas
+            ruthCtx.fillStyle = '#a0a0a5';
+            ruthCtx.font = '13px sans-serif';
+            ruthCtx.fillText("Fascio incidenti particelle α (+)", 15, 25);
+            ruthCtx.fillText("Nucleo d'Oro Massiccio (Au)", nX - 75, nY - 25);
+            
+            requestAnimationFrame(drawRutherford);
+        }
+        drawRutherford();
+
+        // ==========================================
+        // ANIMAZIONE CODICE: SALTO QUANTICO DI BOHR (FASE 4)
+        // ==========================================
+        const bohrCanvas = document.getElementById('bohrCanvas');
+        const bohrCtx = bohrCanvas.getContext('2d');
+        let currentOrbit = 1; 
+        let angle = 0;
+
+        const btnExcite = document.getElementById('btnExcite');
+        const btnRelax = document.getElementById('btnRelax');
+        const quantumStateText = document.getElementById('quantumState');
+        const photonEmitText = document.getElementById('photonEmit');
+
+        btnExcite.addEventListener('click', () => {
+            if(currentOrbit === 1) {
+                currentOrbit = 2;
+                quantumStateText.innerText = "Stato Eccitato (n=2)";
+                quantumStateText.style.color = "#ff007f";
+                photonEmitText.innerText = "Energia Assorbita (Fotone Ingressi)";
+                photonEmitText.style.color = "#ffffff";
+            }
+        });
+
+        btnRelax.addEventListener('click', () => {
+            if(currentOrbit === 2) {
+                currentOrbit = 1;
+                quantumStateText.innerText = "Stato Fondamentale (n=1)";
+                quantumStateText.style.color = "#00f2fe";
+                photonEmitText.innerText = "Fotone Emesso! λ = 486 nm (Ciano)";
+                photonEmitText.style.color = "#00f2fe";
+            }
+        });
+
+        function drawBohr() {
+            bohrCtx.clearRect(0, 0, bohrCanvas.width, bohrCanvas.height);
+            const cx = bohrCanvas.width / 2;
+            const cy = bohrCanvas.height / 2;
+            
+            // Protoni/Neutroni Centrali
+            bohrCtx.beginPath();
+            bohrCtx.arc(cx, cy, 12, 0, Math.PI*2);
+            bohrCtx.fillStyle = '#ffffff';
+            bohrCtx.fill();
+            
+            // Orbita di base n=1
+            bohrCtx.beginPath();
+            bohrCtx.arc(cx, cy, 55, 0, Math.PI*2);
+            bohrCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+            bohrCtx.setLineDash([4, 4]);
+            bohrCtx.stroke();
+            
+            // Orbita periferica n=2
+            bohrCtx.beginPath();
+            bohrCtx.arc(cx, cy, 95, 0, Math.PI*2);
+            bohrCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+            bohrCtx.stroke();
+            bohrCtx.setLineDash([]); 
+            
+            // Calcolo dinamico del raggio in base allo stato
+            let targetRadius = currentOrbit === 1 ? 55 : 95;
+            let ex = cx + Math.cos(angle) * targetRadius;
+            let ey = cy + Math.sin(angle) * targetRadius;
+            
+            // Particella Elettrone
+            bohrCtx.beginPath();
+            bohrCtx.arc(ex, ey, 7, 0, Math.PI*2);
+            bohrCtx.fillStyle = currentOrbit === 1 ? '#00f2fe' : '#ff007f';
+            bohrCtx.shadowBlur = 10;
+            bohrCtx.shadowColor = bohrCtx.fillStyle;
+            bohrCtx.fill();
+            bohrCtx.shadowBlur = 0;
+            
+            // Velocità angolare coerente (più lento all'esterno per Keplero/Bohr)
+            angle += currentOrbit === 1 ? 0.04 : 0.02;
+            
+            requestAnimationFrame(drawBohr);
+        }
+        drawBohr();
     </script>
 </body>
 </html>
