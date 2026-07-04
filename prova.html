@@ -6,13 +6,26 @@
     <title>Atomic History - L'Evoluzione dell'Atomo</title>
     <style>
         /* ==========================================================================
-           RESET E FONT
+           RESET, FONT E ACCESSIBILITÀ BASE
            ========================================================================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Supporto per utenti che preferiscono animazioni ridotte */
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto !important;
+            }
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
         }
 
         body {
@@ -22,8 +35,46 @@
             scroll-behavior: smooth;
         }
 
+        /* Indicatore di focus universale e visibile per la tastiera */
+        *:focus-visible {
+            outline: 3px solid #00f2fe;
+            outline-offset: 4px;
+        }
+
+        /* Skip link per saltare direttamente al contenuto principale */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 20px;
+            background: #00f2fe;
+            color: #000000;
+            padding: 10px 20px;
+            z-index: 2000;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 0 0 4px 4px;
+            transition: top 0.2s ease;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Elementi nascosti ma leggibili dagli screen reader (SR-Only) */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
         /* ==========================================================================
-           NAV BAR MODERNA
+           NAV BAR MODERNA (Contrasto e Usabilità)
            ========================================================================== */
         .navbar {
             position: fixed;
@@ -34,7 +85,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 8%;
-            background: rgba(10, 10, 12, 0.7);
+            background: rgba(10, 10, 12, 0.9); /* Aumentata opacità per contrasto */
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1000;
@@ -58,14 +109,16 @@
 
         .nav-links a {
             text-decoration: none;
-            color: #a0a0a5;
+            color: #d1d1d6; /* Migliorato contrasto (rispetta il rapporto 4.5:1) */
             font-size: 16px;
             font-weight: 500;
             transition: color 0.3s ease;
+            padding: 5px 0;
         }
 
         .nav-links a:hover, .nav-links a.active {
             color: #00f2fe;
+            border-bottom: 2px solid #00f2fe;
         }
 
         /* ==========================================================================
@@ -93,7 +146,7 @@
             position: relative;
             z-index: 2;
             max-width: 600px;
-            pointer-events: none;
+            /* RIMOSSO pointer-events: none per consentire l'interazione e la selezione del testo */
         }
 
         .hero-content h1 {
@@ -108,16 +161,15 @@
 
         .hero-content p {
             font-size: 1.2rem;
-            color: #a0a0a5;
+            color: #e5e5ea; /* Ottimizzato contrasto */
             margin-bottom: 30px;
         }
 
         .btn {
-            pointer-events: auto;
             display: inline-block;
             padding: 12px 30px;
             background: linear-gradient(45deg, #00f2fe, #4facfe);
-            color: #000;
+            color: #000000;
             font-weight: 600;
             text-decoration: none;
             border-radius: 50px;
@@ -168,7 +220,7 @@
         p {
             font-size: 1.1rem;
             line-height: 1.6;
-            color: #a0a0a5;
+            color: #e5e5ea; /* Ottimizzato contrasto per WCAG AA */
             margin-bottom: 20px;
         }
 
@@ -185,7 +237,7 @@
         li {
             font-size: 1.1rem;
             line-height: 1.6;
-            color: #a0a0a5;
+            color: #e5e5ea; /* Ottimizzato contrasto */
             margin-bottom: 12px;
         }
 
@@ -198,11 +250,16 @@
             font-weight: 600;
         }
 
-        /* Tabelle strutturate */
+        /* Tabelle responsive e accessibili */
+        .table-container {
+            width: 100%;
+            overflow-x: auto; /* Impedisce la rottura del layout su schermi piccoli o zoom elevati */
+            margin: 40px 0;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 40px 0;
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
@@ -224,11 +281,11 @@
         }
 
         td {
-            color: #a0a0a5;
+            color: #e5e5ea; /* Ottimizzato contrasto */
         }
 
         /* ==========================================================================
-           ELEMENTI INTERATTIVI AUMENTATI (NUOVI)
+           ELEMENTI INTERATTIVI ACCESSIBILI
            ========================================================================== */
         .interactive-box {
             background: rgba(255, 255, 255, 0.02);
@@ -245,7 +302,6 @@
             border-radius: 8px;
             max-width: 100%;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            cursor: crosshair;
             margin-top: 15px;
         }
 
@@ -253,6 +309,7 @@
             margin-top: 20px;
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
             gap: 15px;
         }
 
@@ -267,9 +324,9 @@
             transition: all 0.3s ease;
         }
 
-        .btn-interactive:hover {
+        .btn-interactive:hover, .btn-interactive:focus {
             background: #00f2fe;
-            color: #000;
+            color: #000000;
             box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
         }
 
@@ -290,9 +347,11 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="logo">ATOMIC<span>HISTORY</span></div>
-        <ul class="nav-links">
+    <a href="#main-content" class="skip-link">Salta alla navigazione dei contenuti</a>
+
+    <nav class="navbar" aria-label="Menu di navigazione principale cronologico">
+        <div class="logo" id="site-logo">ATOMIC<span>HISTORY</span></div>
+        <ul class="nav-links" aria-labelledby="site-logo">
             <li><a href="#hero" class="active">Home</a></li>
             <li><a href="#fase1">1. Leggi Ponderali</a></li>
             <li><a href="#fase2">2. Dalton & Thomson</a></li>
@@ -302,186 +361,200 @@
         </ul>
     </nav>
 
-    <section id="hero" class="hero-section">
-        <div id="canvas-container"></div>
-        <div class="hero-content">
-            <h1>L'Evoluzione dell'Atomo</h1>
-            <p>Un viaggio scientifico e filosofico attraverso i secoli: dalla pura speculazione concettuale all'infinitamente piccolo regolato dalla probabilità quantistica.</p>
-            <a href="#fase1" class="btn">Inizia il Viaggio</a>
-        </div>
-    </section>
-
-    <section id="fase1">
-        <div class="content-container">
-            <h2>1. Le Radici Filosofiche e le Leggi Ponderali della Chimica</h2>
-            
-            <h3>L'Origine del Concetto (Filosofia e Alchimia)</h3>
-            <p>Il concetto di atomo nasce nel V secolo a.C. in ambito prettamente filosofico grazie a <span class="highlight">Leucippo</span>, <span class="highlight">Democrito</span> ed <span class="highlight">Epicuro</span> (visione poi ripresa a Roma da <span class="highlight">Tito Lucrezio Caro</span> nel I secolo a.C.). Essi ipotizzarono che la materia non fosse continua, ma costituita da minuscole particelle geometricamente differenti per forma e dimensioni, separate dal vuoto e chiamate <em>àtomos</em> (indivisibili).</p>
-            <p>In netta opposizione all'atomismo, <span class="highlight">Aristotele</span> sostenne la teoria del <em>continuum</em>, secondo cui la materia poteva essere suddivisa all'infinito in particelle sempre più piccole, mantenendo sempre le medesime caratteristiche. Questa visione anti-atomistica dominò la filosofia naturale per quasi due millenni.</p>
-            <p>Nel XIII secolo, l'alchimista <span class="highlight">Geber</span> (ritenuto l'autore del <em>De investigatione perfectionis</em>) introdusse la teoria del corpuscolarismo. A differenza degli atomi greci, i "corpuscoli" erano particelle minuscole dotate di una struttura interna e teoricamente divisibili. Questa concezione influenzò profondamente gli scienziati del XVII secolo, tra cui <span class="highlight">Isaac Newton</span>, che la utilizzò per formulare la sua teoria corpuscolare della luce.</p>
-
-            <h3>Le Leggi Ponderali: Il Passaggio alla Scienza Quantitativa</h3>
-            <p>Tra la fine del XVIII e l'inizio del XIX secolo, tre scienziati formularono le leggi fondamentali della massa, trasformando l'atomo da speculazione filosofica a necessità matematica:</p>
-            <ul>
-                <li><strong>Legge della Conservazione della Massa (Lavoisier, 1789):</strong> <em>"In una reazione chimica, la massa totale dei reagenti è esattamente uguale alla massa totale dei prodotti."</em> La materia non si crea e non si distrugge, si riorganizza soltanto.</li>
-                <li><strong>Legge delle Proporzioni Definite (Proust, 1799):</strong> <em>"In un determinato composto chimico, gli elementi che lo costituiscono sono sempre combinati secondo rapporti di massa costanti e definiti."</em> L'acqua conterrà sempre lo stesso rapporto fisso in peso tra idrogeno e ossigeno, indipendentemente dalla sua origine.</li>
-                <li><strong>Legge delle Proporzioni Multiple (Dalton, 1808):</strong> <em>"Quando due elementi si combinano per formare composti diversi, le masse di uno degli elementi che si combinano con una quantità fissa dell'altro stanno tra loro in rapporti esprimibili mediante numeri interi, semplici e piccoli."</em></li>
-            </ul>
-        </div>
-    </section>
-
-    <section id="fase2">
-        <div class="content-container">
-            <h2>2. Il Primo Atomo Scientifico e la Crisi dell'Indivisibilità</h2>
-            
-            <h3>Il Modello di Dalton (1808)</h3>
-            <p>Spinto dalla necessità di spiegare le tre leggi ponderali, il chimico inglese <span class="highlight">John Dalton</span> formulò la prima vera teoria atomica moderna su basi empiriche, fondata su 5 postulati cardine:</p>
-            <ol>
-                <li>La materia è formata da particelle microscopiche indivisibili e indistruttibili chiamate atomi.</li>
-                <li>Tutti gli atomi di uno stesso elemento sono chimicamente uguali e possiedono la stessa massa.</li>
-                <li>Gli atomi di elementi differenti hanno masse diverse e proprietà chimiche differenti.</li>
-                <li>Gli atomi di elementi diversi si combinano tra loro solo in rapporti di numeri interi per formare i composti.</li>
-                <li>Nelle reazioni chimiche, gli atomi non vengono né creati né distrutti, ma si separano e si ricombinano in modi nuovi.</li>
-            </ol>
-            <p><strong>Geometria tridimensionale del modello:</strong> L'atomo di Dalton è una <strong>sfera piena</strong>, massiccia, omogenea, priva di cariche elettriche e totalmente priva di una struttura interna.</p>
-
-            <h3>La Crisi dell'Indivisibilità: La Scoperta dell'Elettrone (1897)</h3>
-            <p>Il modello sferico ed elettricamente neutro di Dalton entrò in crisi irreversibile a causa di evidenze sperimentali legate all'elettricità e alla stabilità della materia:</p>
-            <ul>
-                <li><strong>J.J. Thomson (1897):</strong> Conducendo esperimenti all'interno di tubi di vetro sottovuoto (tubi a raggi catodici), Thomson notò l'emissione di particelle che venivano deviate dai campi magnetici ed elettrici verso il polo positivo. Dimostrò così l'esistenza di particelle subatomiche dotate di <strong>carica elettrica negativa</strong> e con una massa circa 1800 volte inferiore a quella dell'atomo di idrogeno.</li>
-                <li><strong>La Radioattività (Becquerel e i coniugi Curie):</strong> La scoperta che alcuni elementi pesanti decadevano spontaneamente emettendo particelle cariche ed energia confermò che l'atomo non era affatto indistruttibile, ma conteneva una complessa riserva di particelle interne.</li>
-            </ul>
-
-            <h3>Il Modello a Panettone di Thomson (1902)</h3>
-            <p>Per integrare l'elettrone senza violare il principio per cui la materia è elettricamente neutra, Thomson propose il primo modello strutturato (il <em>Plum Pudding Model</em>): l'atomo è descritto come una sfera continua dotata di una <strong>carica positiva diffusa</strong> e omogenea. All'interno di questa matrice positiva sono immersi gli <strong>elettroni negativi</strong> puntiformi, disposti in posizioni regolari e stabili per bilanciare esattamente la carica positiva globale.</p>
-        </div>
-    </section>
-
-    <section id="fase3">
-        <div class="content-container">
-            <h2>3. La Scoperta del Nucleo: Il Modello di Rutherford</h2>
-            
-            <h3>L'Esperimento della Lamina d'Oro (1910-1911)</h3>
-            <p>Nel 1910, lo scienziato neozelandese <span class="highlight">Ernest Rutherford</span>, insieme ai suoi collaboratori Geiger e Marsden, eseguì un esperimento cruciale per testare la validità del modello di Thomson. Bombardò una sottilissima lamina d'oro con un fascio di particelle &alpha; (nuclei di elio veloci e carichi positivamente), posizionando uno schermo al solfuro di zinco tutt'intorno per rilevare gli impatti.</p>
-            <p>I risultati scardinarono le aspettative dell'epoca:</p>
-            <ol>
-                <li>La stragrande maggioranza delle particelle &alpha; (circa il 99%) attraversava la lamina dritta, come se lo spazio fosse vuoto.</li>
-                <li>Una piccolissima percentuale subiva vistose deviazioni angolari.</li>
-                <li>Circa 1 particella su 8000 veniva <strong>rimbalzata all'indietro</strong> con violenza.</li>
-            </ol>
-            <p>Rutherford commentò: <em>"Fu l'evento più incredibile della mia vita, come se sparassi un proiettile da 15 pollici contro un foglio di carta velina e questo tornasse indietro a colpirti"</em>.</p>
-
-            <div class="interactive-box">
-                <h3>Laboratorio Virtuale: L'Esperimento di Rutherford</h3>
-                <p>Muovi il mouse sopra il pannello per variare l'altezza del fascio alfa (&alpha;). Nota come la traiettoria devia o rimbalza solo se si punta direttamente al minuscolo nucleo centrale.</p>
-                <canvas id="rutherfordCanvas" width="600" height="300"></canvas>
+    <main id="main-content">
+        <section id="hero" class="hero-section" aria-label="Introduzione">
+            <div id="canvas-container" aria-hidden="true"></div> <div class="hero-content">
+                <h1>L'Evoluzione dell'Atomo</h1>
+                <p>Un viaggio scientifico e filosofico attraverso i secoli: dalla pura speculazione concettuale all'infinitamente piccolo regolato dalla probabilità quantistica.</p>
+                <a href="#fase1" class="btn">Inizia il Viaggio <span class="sr-only">partendo dalle origini filosofiche</span></a>
             </div>
+        </section>
 
-            <h3>Il Modello Planetario (1911)</h3>
-            <p>Rutherford demolì l'idea dell'atomo pieno e formulò il <strong>modello planetario</strong>:</p>
-            <ul>
-                <li><strong>Il Nucleo:</strong> Tutta la carica positiva e la quasi totalità della massa dell'atomo sono concentrate in uno spazio centrale infinitamente piccolo rispetto all'atomo totale, chiamato nucleo.</li>
-                <li><strong>Il Vuoto Atomico:</strong> Gli elettroni negativi ruotano intorno al nucleo lungo orbite circolari a grandissima distanza, proprio come i pianeti attorno al Sole. L'atomo è prevalentemente <strong>spazio vuoto</strong>.</li>
-            </ul>
-        </div>
-    </section>
+        <section id="fase1" aria-labelledby="title-fase1">
+            <div class="content-container">
+                <h2 id="title-fase1">1. Le Radici Filosofiche e le Leggi Ponderali della Chimica</h2>
+                
+                <h3>L'Origine del Concetto (Filosofia e Alchimia)</h3>
+                <p>Il concetto di atomo nasce nel V secolo a.C. in ambito prettamente filosofico grazie a <span class="highlight">Leucippo</span>, <span class="highlight">Democrito</span> ed <span class="highlight">Epicuro</span> (visione poi ripresa a Roma da <span class="highlight">Tito Lucrezio Caro</span> nel I secolo a.C.). Essi ipotizzarono che la materia non fosse continua, ma costituita da minuscole particelle geometricamente differenti per forma e dimensioni, separate dal vuoto e chiamate <em>àtomos</em> (indivisibili).</p>
+                <p>In netta opposizione all'atomismo, <span class="highlight">Aristotele</span> sostenne la teoria del <em>continuum</em>, secondo cui la materia poteva essere suddivisa all'infinito in particelle sempre più piccole, mantenendo sempre le medesime caratteristiche. Questa visione anti-atomistica dominò la filosofia naturale per quasi due millenni.</p>
+                <p>Nel XIII secolo, l'alchimista <span class="highlight">Geber</span> (ritenuto l'autore del <em>De investigatione perfectionis</em>) introdusse la teoria del corpuscolarismo. A differenza degli atomi greci, i "corpuscoli" erano particelle minuscole dotate di una struttura interna e teoricamente divisibili. Questa concezione influenzò profondamente gli scienziati del XVII secolo, tra cui <span class="highlight">Isaac Newton</span>, che la utilizzò per formulare la sua teoria corpuscolare della luce.</p>
 
-    <section id="fase4">
-        <div class="content-container">
-            <h2>4. Il Paradosso Elettrodinamico e l'Atomo Quantizzato</h2>
-            
-            <h3>La Crisi del Modello Planetario</h3>
-            <p>Il modello di Rutherford violava le leggi della Fisica Classica. Secondo l'Elettrodinamica di Maxwell, una carica in moto circolare accelerato deve irradiare continuamente energia sotto forma di onde elettromagnetiche. Perdendo progressivamente energia, l'elettrone avrebbe dovuto descrivere una spirale fino a <strong>collassare sul nucleo</strong> in una frazione di secondo. La materia non sarebbe stata stabile.</p>
-            <p>Nel 1900, <span class="highlight">Max Planck</span> aveva introdotto il concetto che l'energia viene scambiata in "pacchetti" discreti detti quanti ($E = h\nu$). Questa impostazione fu la chiave per interpretare gli <strong>spettri atomici a righe</strong>.</p>
+                <h3>Le Leggi Ponderali: Il Passaggio alla Scienza Quantitative</h3>
+                <p>Tra la fine del XVIII e l'inizio del XIX secolo, tre scienziati formularono le leggi fondamentali della massa, trasformando l'atomo da speculazione filosofica a necessità matematica:</p>
+                <ul>
+                    <li><strong>Legge della Conservazione della Massa (Lavoisier, 1789):</strong> <em>"In una reazione chimica, la massa totale dei reagenti è esattamente uguale alla massa totale dei prodotti."</em> La materia non si crea e non si distrugge, si riorganizza soltanto.</li>
+                    <li><strong>Legge delle Proporzioni Definite (Proust, 1799):</strong> <em>"In un determinato composto chimico, gli elementi che lo costituiscono sono sempre combinati secondo rapporti di massa costanti e definiti."</em> L'acqua conterrà sempre lo stesso rapporto fisso in peso tra idrogeno e ossigeno, indipendentemente dalla sua origine.</li>
+                    <li><strong>Legge delle Proporzioni Multiple (Dalton, 1808):</strong> <em>"Quando due elementi si combinano per formare composti diversi, le masse di uno degli elementi che si combinano con una quantità fissa dell'altro stanno tra loro in rapporti esprimibili mediante numeri interi, semplici e piccoli."</em></li>
+                </ul>
+            </div>
+        </section>
 
-            <h3>L'Atomo Quantizzato di Bohr-Sommerfeld (1913)</h3>
-            <p>Il fisico danese <span class="highlight">Niels Bohr</span> applicò la quantizzazione al modello planetario introducendo tre postulati:</p>
-            <ol>
-                <li><strong>Orbite Stazionarie:</strong> Gli elettroni ruotano attorno al nucleo solo su determinate orbite permesse. In queste orbite, <strong>non irradiano energia</strong> e l'atomo resta stabile.</li>
-                <li><strong>Stato Fondamentale ed Eccitato:</strong> L'orbita a minor energia è lo <em>stato fondamentale</em>. Assorbendo energia, l'elettrone esegue un <strong>salto quantico</strong> verso un'orbita esterna (<em>stato eccitato</em>).</li>
-                <li><strong>Emissioni di Fotoni:</strong> Quando l'elettrone ricade su un'orbita inferiore, rilascia un fotone di energia pari alla differenza energetica dei due livelli ($\Delta E = E_2 - E_1 = h\nu$).</li>
-            </ol>
+        <section id="fase2" aria-labelledby="title-fase2">
+            <div class="content-container">
+                <h2 id="title-fase2">2. Il Primo Atomo Scientifico e la Crisi dell'Indivisibilità</h2>
+                
+                <h3>Il Modello di Dalton (1808)</h3>
+                <p>Spinto dalla necessità di spiegare le tre leggi ponderali, il chimico inglese <span class="highlight">John Dalton</span> formulò la prima vera teoria atomica moderna su basi empiriche, fondata su 5 postulati cardine:</p>
+                <ol>
+                    <li>La materia è formata da particelle microscopiche indivisibili e indistruttibili chiamate atomi.</li>
+                    <li>Tutti gli atomi di uno stesso elemento sono chimicamente uguali e possiedono la stessa massa.</li>
+                    <li>Gli atomi di elementi differenti hanno masse diverse e proprietà chimiche differenti.</li>
+                    <li>Gli atomi di elementi diversi si combinano tra loro solo in rapporti di numeri interi per formare i composti.</li>
+                    <li>Nelle reazioni chimiche, gli atomi non vengono né creati né distrutti, ma si separano e si ricombinano in modi nuovi.</li>
+                </ol>
+                <p><strong>Geometria tridimensionale del modello:</strong> L'atomo di Dalton è una <strong>sfera piena</strong>, massiccia, omogenea, priva di cariche elettriche e totalmente priva di una struttura interna.</p>
 
-            <div class="interactive-box">
-                <h3>Laboratorio Virtuale: Il Salto Quantico di Bohr</h3>
-                <p>Usa i pulsanti per eccitare l'elettrone fornendo energia o per farlo rilassare. Osserva l'emissione del fotone luminoso quando scende di livello.</p>
-                <div class="flex-container">
-                    <canvas id="bohrCanvas" width="300" height="300"></canvas>
-                    <div>
-                        <div class="controls">
-                            <button class="btn-interactive" id="btnExcite">Fornisci Energia (+h&nu;)</button>
-                            <button class="btn-interactive" id="btnRelax">Rilassa Elettrone (-h&nu;)</button>
+                <h3>La Crisi dell'Indivisibilità: La Scoperta dell'Elettrone (1897)</h3>
+                <p>Il modello sferico ed elettricamente neutro di Dalton entrò in crisi irreversibile a causa di evidenze sperimentali legate all'elettricità e alla stabilità della materia:</p>
+                <ul>
+                    <li><strong>J.J. Thomson (1897):</strong> Conducendo esperimenti all'interno di tubi di vetro sottovuoto (tubi a raggi catodici), Thomson notò l'emissione di particelle che venivano deviate dai campi magnetici ed elettrici verso il polo positivo. Dimostrò così l'esistenza di particelle subatomiche dotate di <strong>carica elettrica negativa</strong> e con una massa circa 1800 volte inferiore a quella dell'atomo di idrogeno.</li>
+                    <li><strong>La Radioattività (Becquerel e i coniugi Curie):</strong> La scoperta che alcuni elementi pesanti decadevano spontaneamente emettendo particelle cariche ed energia confermò che l'atomo non era affatto indistruttibile, ma conteneva una complessa riserva di particelle interne.</li>
+                </ul>
+
+                <h3>Il Modello a Panettone di Thomson (1902)</h3>
+                <p>Per integrare l'elettrone senza violare il principio per cui la materia è elettricamente neutra, Thomson propose il primo modello strutturato (il <em>Plum Pudding Model</em>): l'atomo è descritto como una sfera continua dotata di una <strong>carica positiva diffusa</strong> e omogenea. All'interno di questa matrice positiva sono immersi gli <strong>elettroni negativi</strong> puntiformi, disposti in posizioni regolari e stabili per bilanciare esattamente la carica positiva globale.</p>
+            </div>
+        </section>
+
+        <section id="fase3" aria-labelledby="title-fase3">
+            <div class="content-container">
+                <h2 id="title-fase3">3. La Scoperta del Nucleo: Il Modello di Rutherford</h2>
+                
+                <h3>L'Esperimento della Lamina d'Oro (1910-1911)</h3>
+                <p>Nel 1910, lo scienziato neozelandese <span class="highlight">Ernest Rutherford</span>, insieme ai suoi collaboratori Geiger e Marsden, eseguì un esperimento cruciale per testare la validità del modello di Thomson. Bombardò una sottilissima lamina d'oro con un fascio di particelle &alpha; (nuclei di elio veloci e carichi positivamente), posizionando uno schermo al solfuro di zinco tutt'intorno per rilevare gli impatti.</p>
+                <p>I risultati scardinarono le aspettative dell'epoca:</p>
+                <ol>
+                    <li>La stragrande maggioranza delle particelle &alpha; (circa il 99%) attraversava la lamina dritta, come se lo spazio fosse vuoto.</li>
+                    <li>Una piccolissima percentuale subiva vistose deviazioni angolari.</li>
+                    <li>Circa 1 particella su 8000 veniva <strong>rimbalzata all'indietro</strong> con violenza.</li>
+                </ol>
+                <p>Rutherford commentò: <em>"Fu l'evento più incredibile della mia vita, come se sparassi un proiettile da 15 pollici contro un foglio di carta velina e questo tornasse indietro a colpirti"</em>.</p>
+
+                <div class="interactive-box" role="region" aria-labelledby="lab-rutherford-title">
+                    <h3 id="lab-rutherford-title">Laboratorio Virtuale: L'Esperimento di Rutherford</h3>
+                    <p id="rutherford-desc">Simulatore grafico dell'esperimento. Per gli utenti con screen reader o navigazione da tastiera, utilizzare i pulsanti sottostanti per modificare l'altezza del fascio e udire/leggere il comportamento delle particelle.</p>
+                    
+                    <canvas id="rutherfordCanvas" width="600" height="300" aria-hidden="true"></canvas>
+                    
+                    <div class="controls">
+                        <button class="btn-interactive" id="btnRuthUp">Sposta Fascio in Alto</button>
+                        <button class="btn-interactive" id="btnRuthCenter">Mira al Centro (Impatto)</button>
+                        <button class="btn-interactive" id="btnRuthDown">Sposta Fascio in Basso</button>
+                    </div>
+                    <div id="rutherford-live-status" class="sr-only" aria-live="polite">Il fascio è attualmente puntato sul centro, la particella viene rimbalzata.</div>
+                </div>
+
+                <h3>Il Modello Planetario (1911)</h3>
+                <p>Rutherford demolì l'idea dell'atomo pieno e formulò il <strong>modello planetario</strong>:</p>
+                <ul>
+                    <li><strong>Il Nucleo:</strong> Tutta la carica positiva e la quasi totalità della massa dell'atomo sono concentrate in uno spazio centrale infinitamente piccolo rispetto all'atomo totale, chiamato nucleo.</li>
+                    <li><strong>Il Vuoto Atomico:</strong> Gli elettroni negativi ruotano intorno al nucleo lungo orbite circolari a grandissima distanza, proprio come i pianeti attorno al Sole. L'atomo è prevalentemente <strong>spazio vuoto</strong>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="fase4" aria-labelledby="title-fase4">
+            <div class="content-container">
+                <h2 id="title-fase4">4. Il Paradosso Elettrodinamico e l'Atomo Quantizzato</h2>
+                
+                <h3>La Crisi del Modello Planetario</h3>
+                <p>Il modello di Rutherford violava le leggi della Fisica Classica. Secondo l'Elettrodinamica di Maxwell, una carica in moto circolare accelerato deve irradiare continuamente energia sotto forma di onde elettromagnetiche. Perdendo progressivamente energia, l'elettrone avrebbe dovuto descruire una spirale fino a <strong>collassare sul nucleo</strong> in una frazione di secondo. La materia non sarebbe stata stabile.</p>
+                <p>Nel 1900, <span class="highlight">Max Planck</span> aveva introdotto il concetto che l'energia viene scambiata in "pacchetti" discreti detti quanti ($E = h\nu$). Questa impostazione fu la chiave per interpretare gli <strong>spettri atomici a righe</strong>.</p>
+
+                <h3>L'Atomo Quantizzato di Bohr-Sommerfeld (1913)</h3>
+                <p>Il fisico danese <span class="highlight">Niels Bohr</span> applicò la quantizzazione al modello planetario introducendo tre postulati:</p>
+                <ol>
+                    <li><strong>Orbite Stazionarie:</strong> Gli elettroni ruotano attorno al nucleo solo su determinate orbite permesse. In queste orbite, <strong>non irradiano energia</strong> e l'atomo resta stabile.</li>
+                    <li><strong>Stato Fondamentale ed Eccitato:</strong> L'orbita a minor energia è lo <em>stato fondamentale</em>. Assorbendo energia, l'elettrone esegue un <strong>salto quantico</strong> verso un'orbita esterna (<em>stato eccitato</em>).</li>
+                    <li><strong>Emissioni di Fotoni:</strong> Quando l'elettrone ricade su un'orbita inferiore, rilascia un fotone di energia pari alla differenza energetica dei due livelli ($\Delta E = E_2 - E_1 = h\nu$).</li>
+                </ol>
+
+                <div class="interactive-box" role="region" aria-labelledby="lab-bohr-title">
+                    <h3 id="lab-bohr-title">Laboratorio Virtuale: Il Salto Quantico di Bohr</h3>
+                    <p>Usa i pulsanti per eccitare l'elettrone fornendo energia o per farlo rilassare. Osserva l'emissione del fotone luminoso quando scende di livello.</p>
+                    <div class="flex-container">
+                        <canvas id="bohrCanvas" width="300" height="300" aria-hidden="true"></canvas>
+                        <div>
+                            <div class="controls">
+                                <button class="btn-interactive" id="btnExcite">Fornisci Energia (+h&nu;)</button>
+                                <button class="btn-interactive" id="btnRelax">Rilassa Elettrone (-h&nu;)</button>
+                            </div>
+                            <div aria-live="polite" style="margin-top: 25px;">
+                                <p>Livello energetico: <span id="quantumState" class="highlight">Stato Fondamentale (n=1)</span></p>
+                                <p>Radiazione: <span id="photonEmit" class="quantum-flash" style="color: #a0a0a5;">Nessuna emissione</span></p>
+                            </div>
                         </div>
-                        <p style="margin-top: 25px;">Livello energetico: <span id="quantumState" class="highlight">Stato Fondamentale (n=1)</span></p>
-                        <p>Radiazione: <span id="photonEmit" class="quantum-flash" style="color: #555;">Nessuna emissione</span></p>
                     </div>
                 </div>
+
+                <p>Successivamente, <span class="highlight">Arnold Sommerfeld</span> perfezionò il modello introducendo le <strong>orbite ellittiche</strong> e nuovi numeri quantici per spiegare la struttura fine degli spettri degli atomi più complessi.</p>
             </div>
+        </section>
 
-            <p>Successivamente, <span class="highlight">Arnold Sommerfeld</span> perfezionò il modello introducendo le <strong>orbite ellittiche</strong> e nuovi numeri quantici per spiegare la struttura fine degli spettri degli atomi più complessi.</p>
-        </div>
-    </section>
+        <section id="fase5" aria-labelledby="title-fase5">
+            <div class="content-container">
+                <h2 id="title-fase5">5. La Rivoluzione Ondulatoria e il Modello Contemporaneo</h2>
+                
+                <h3>La Demolizione del Determinismo</h3>
+                <p>Il modello di Bohr falliva nel calcolare gli spettri degli atomi multielettronici. Tra il 1924 e il 1927, tre scoperte scardinarono definitivamente la fisica classica:</p>
+                <ul>
+                    <li><strong>Dualismo Onda-Particella (Louis de Broglie, 1924):</strong> L'elettrone possiede una duplice natura: si comporta sia come corpuscolo sia come un'<strong>onda elettromagnetica</strong> associata ($\lambda = h/mv$).</li>
+                    <li><strong>Principio di Indeterminazione (Werner Heisenberg, 1927):</strong> È impossibile conoscere contemporaneamente e con precisione assoluta sia la posizione ($x$) sia la quantità di moto ($p$) di una particella subatomica ($\Delta x \cdot \Delta p \ge h/4\pi$). Le orbite geometriche precise non esistono più.</li>
+                    <li><strong>L'Equazione di Schrödinger (Erwin Schrödinger, 1926):</strong> Un'equazione differenziale che descrive il comportamento dell'elettrone tramite una funzione d'onda ($\Psi$) nello spazio tridimensionale.</li>
+                </ul>
 
-    <section id="fase5">
-        <div class="content-container">
-            <h2>5. La Rivoluzione Ondulatoria e il Modello Contemporaneo</h2>
-            
-            <h3>La Demolizione del Determinismo</h3>
-            <p>Il modello di Bohr falliva nel calcolare gli spettri degli atomi multielettronici. Tra il 1924 e il 1927, tre scoperte scardinarono definitivamente la fisica classica:</p>
-            <ul>
-                <li><strong>Dualismo Onda-Particella (Louis de Broglie, 1924):</strong> L'elettrone possiede una duplice natura: si comporta sia come corpuscolo sia come un'<strong>onda elettromagnetica</strong> associata ($\lambda = h/mv$).</li>
-                <li><strong>Principio di Indeterminazione (Werner Heisenberg, 1927):</strong> È impossibile conoscere contemporaneamente e con precisione assoluta sia la posizione ($x$) sia la quantità di moto ($p$) di una particella subatomica ($\Delta x \cdot \Delta p \ge h/4\pi$). Le orbite geometriche precise non esistono più.</li>
-                <li><strong>L'Equazione di Schrödinger (Erwin Schrödinger, 1926):</strong> Un'equazione differenziale che descrive il comportamento dell'elettrone tramite una funzione d'onda ($\Psi$) nello spazio tridimensionale.</li>
-            </ul>
+                <h3>L'Atomo Moderno: Il Modello a Orbitali</h3>
+                <p>Il termine "orbita" viene sostituito da <span class="highlight">Orbitale</span>. L'orbitale è una <strong>regione di spazio</strong> intorno al nucleo in cui la probabilità di trovare l'elettrone è massima (pari al <strong>95%</strong>, calcolata tramite il quadrato della funzione d'onda $|\Psi|^2$). L'atomo appare oggi come un nucleo circondato da una <strong>nube elettronica</strong> a densità variabile.</p>
 
-            <h3>L'Atomo Moderno: Il Modello a Orbitali</h3>
-            <p>Il termine "orbita" viene sostituito da <span class="highlight">Orbitale</span>. L'orbitale è una <strong>regione di spazio</strong> intorno al nucleo in cui la probabilità di trovare l'elettrone è massima (pari al <strong>95%</strong>, calcolata tramite il quadrato della funzione d'onda $|\Psi|^2$). L'atomo appare oggi come un nucleo circondato da una <strong>nube elettronica</strong> a densità variabile.</p>
+                <h3>La Struttura Subatomica Definitiva</h3>
+                <p>L'atomo nella sua condizione standard (neutra) è composto da tre particelle fondamentali stabili:</p>
+                
+                <div class="table-container">
+                    <table>
+                        <caption>Tabella comparativa delle particelle subatomiche stabili e loro caratteristiche</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Particella Subatomica</th>
+                                <th scope="col">Carica Elettrica (Coulomb)</th>
+                                <th scope="col">Collocazione</th>
+                                <th scope="col">Note Scientifiche</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row"><strong>Protone</strong></th>
+                                <td>$+1,6 \times 10^{-19}\text{ C}$</td>
+                                <td>Nel Nucleo</td>
+                                <td>Scoperto da Rutherford; il suo numero determina l'identità chimica dell'elemento.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><strong>Neutrone</strong></th>
+                                <td>$0\text{ C}$ (Neutro)</td>
+                                <td>Nel Nucleo</td>
+                                <td>Scoperto da James Chadwick nel 1932; agisce come stabilizzatore nucleare.</td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><strong>Elettrone</strong></th>
+                                <td>$-1,6 \times 10^{-19}\text{ C}$</td>
+                                <td>Orbitali Esterni</td>
+                                <td>Scoperto da Thomson; possiede una massa circa 1800 volte inferiore rispetto ai nucleoni.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-            <h3>La Struttura Subatomica Definitiva</h3>
-            <p>L'atomo nella sua condizione standard (neutra) è composto da tre particelle fondamentali stabili:</p>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Particella Subatomica</th>
-                        <th>Carica Elettrica (Coulomb)</th>
-                        <th>Collocazione</th>
-                        <th>Note Scientifiche</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Protone</strong></td>
-                        <td>$+1,6 \times 10^{-19}\text{ C}$</td>
-                        <td>Nel Nucleo</td>
-                        <td>Scoperto da Rutherford; il suo numero determina l'identità chimica dell'elemento.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Neutrone</strong></td>
-                        <td>$0\text{ C}$ (Neutro)</td>
-                        <td>Nel Nucleo</td>
-                        <td>Scoperto da James Chadwick nel 1932; agisce come stabilizzatore nucleare.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Elettrone</strong></td>
-                        <td>$-1,6 \times 10^{-19}\text{ C}$</td>
-                        <td>Orbitali Esterni</td>
-                        <td>Scoperto da Thomson; possiede una massa circa 1800 volte inferiore rispetto ai nucleoni.</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h3>Grandezze Chiave dell'Atomo</h3>
-            <ul>
-                <li><strong>Numero Atomico ($Z$):</strong> Il numero totale di protoni nel nucleo. Definisce l'elemento chimico e la sua posizione nella tavola periodica.</li>
-                <li><strong>Numero di Massa ($A$):</strong> La somma complessiva di protoni e neutroni (chiamati collettivamente <em>nucleoni</em>) nel nucleo.</li>
-                <li><strong>Isotopi:</strong> Atomi con lo stesso Numero Atomico ($Z$) ma differente Numero di Massa ($A$), ovvero con diverso numero di neutroni (es. Prozio, Deuterio e Trizio per l'idrogeno).</li>
-                <li><strong>Ioni:</strong> Atomi carichi elettricamente per via di una perdita o guadagno di elettroni rispetto ai protoni (Cationi se positivi, Anioni se negativi).</li>
-                <li><strong>I Quark:</strong> Protoni e neutroni non sono particelle elementari, ma sono costituiti da triplette di entità substrutturali denominate quark.</li>
-                <li><strong>Lo Stato di Plasma:</strong> Ad altissime temperature e pressioni gli elettroni si separano completamente dai nuclei, generando il quarto stato della materia.</li>
-            </ul>
-        </div>
-    </section>
+                <h3>Grandezze Chiave dell'Atomo</h3>
+                <ul>
+                    <li><strong>Numero Atomico ($Z$):</strong> Il numero totale di protoni nel nucleo. Definisce l'elemento chimico e la sua posizione nella tavola periodica.</li>
+                    <li><strong>Numero di Massa ($A$):</strong> La somma complessiva di protoni e neutroni (chiamati collettivamente <em>nucleoni</em>) nel nucleo.</li>
+                    <li><strong>Isotopi:</strong> Atomi con lo stesso Numero Atomico ($Z$) ma differente Numero di Massa ($A$), ovvero con diverso numero di neutroni (es. Prozio, Deuterio e Trizio per l'idrogeno).</li>
+                    <li><strong>Ioni:</strong> Atomi carichi elettricamente per via di una perdita o guadagno di elettroni rispetto ai protoni (Cationi se positivi, Anioni se negativi).</li>
+                    <li><strong>I Quark:</strong> Protoni e neutroni non sono particelle elementari, ma sono costituiti da triplette di entità substrutturali denominate quark.</li>
+                    <li><strong>Lo Stato di Plasma:</strong> Ad altissime temperature e pressioni gli elettroni si separano completamente dai nuclei, generando il quarto stato della materia.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
 
     <script>
         // --- Gestione Active Link su Scroll ---
@@ -507,22 +580,39 @@
         });
 
         // ==========================================
-        // ANIMAZIONE CODICE: SIMULATORE RUTHERFORD (FASE 3)
+        // SIMULATORE RUTHERFORD (FASE 3) - COMPLETAMENTE ACCESSIBILE
         // ==========================================
         const ruthCanvas = document.getElementById('rutherfordCanvas');
         const ruthCtx = ruthCanvas.getContext('2d');
+        const liveStatus = document.getElementById('rutherford-live-status');
         let mouseY = ruthCanvas.height / 2;
 
+        // Gestione mouse originale mantenuta e ottimizzata
         ruthCanvas.addEventListener('mousemove', (e) => {
             const rect = ruthCanvas.getBoundingClientRect();
-            // Ottimizzazione per display retina o ridimensionamenti
             mouseY = (e.clientY - rect.top) * (ruthCanvas.height / rect.height);
+            updateLiveStatusText(mouseY);
         });
+
+        // Controlli da tastiera / Button per l'accessibilità motoria e visiva
+        document.getElementById('btnRuthUp').addEventListener('click', () => { mouseY = 50; updateLiveStatusText(mouseY); });
+        document.getElementById('btnRuthCenter').addEventListener('click', () => { mouseY = ruthCanvas.height / 2; updateLiveStatusText(mouseY); });
+        document.getElementById('btnRuthDown').addEventListener('click', () => { mouseY = 250; updateLiveStatusText(mouseY); });
+
+        function updateLiveStatusText(y) {
+            const nY = ruthCanvas.height / 2;
+            const dy = y - nY;
+            if (Math.abs(dy) < 6) {
+                liveStatus.innerText = "Il fascio è puntato sul centro. Collisione frontale rilevata: la particella alfa viene rimbalzata indietro con violenza.";
+            } else if (Math.abs(dy) < 75) {
+                liveStatus.innerText = `Il fascio è vicino al nucleo. Deviazione elettrostatica rilevata verso ${dy < 0 ? 'l\'alto' : 'il basso'}.`;
+            } else {
+                liveStatus.innerText = "Il fascio è lontano dal nucleo. Le particelle passano indisturbate attraverso lo spazio vuoto.";
+            }
+        }
 
         function drawRutherford() {
             ruthCtx.clearRect(0, 0, ruthCanvas.width, ruthCanvas.height);
-            
-            // Core del Nucleo d'Oro
             const nX = ruthCanvas.width / 2;
             const nY = ruthCanvas.height / 2;
             
@@ -534,27 +624,22 @@
             ruthCtx.fill();
             ruthCtx.shadowBlur = 0; 
             
-            // Disegno del raggio incidente
             ruthCtx.beginPath();
             ruthCtx.strokeStyle = '#00f2fe';
             ruthCtx.lineWidth = 3;
             ruthCtx.moveTo(0, mouseY);
             
             let collided = false;
-            
             for(let x = 0; x < ruthCanvas.width; x++) {
                 let dx = x - nX;
                 let dy = mouseY - nY;
                 let distance = Math.sqrt(dx*dx + dy*dy);
-                
                 let yPos = mouseY;
                 
-                // Deviazione elettrostatica (Modello di Coulomb simulato)
                 if (distance < 75) {
                     let force = (75 - distance) * 0.85;
                     yPos = mouseY + (dy < 0 ? -force : force);
                     
-                    // Condizione d'urto frontale (Rimbalzo retrogrado)
                     if(Math.abs(dy) < 6 && x > nX - 15) {
                         collided = true;
                         ruthCtx.lineTo(nX - 12, nY);
@@ -566,8 +651,7 @@
             }
             ruthCtx.stroke();
             
-            // UI info testuale sul Canvas
-            ruthCtx.fillStyle = '#a0a0a5';
+            ruthCtx.fillStyle = '#e5e5ea';
             ruthCtx.font = '13px sans-serif';
             ruthCtx.fillText("Fascio incidenti particelle α (+)", 15, 25);
             ruthCtx.fillText("Nucleo d'Oro Massiccio (Au)", nX - 75, nY - 25);
@@ -577,7 +661,7 @@
         drawRutherford();
 
         // ==========================================
-        // ANIMAZIONE CODICE: SALTO QUANTICO DI BOHR (FASE 4)
+        // SALTO QUANTICO DI BOHR (FASE 4)
         // ==========================================
         const bohrCanvas = document.getElementById('bohrCanvas');
         const bohrCtx = bohrCanvas.getContext('2d');
@@ -594,7 +678,7 @@
                 currentOrbit = 2;
                 quantumStateText.innerText = "Stato Eccitato (n=2)";
                 quantumStateText.style.color = "#ff007f";
-                photonEmitText.innerText = "Energia Assorbita (Fotone Ingressi)";
+                photonEmitText.innerText = "Energia Assorbita (Fotone in ingresso)";
                 photonEmitText.style.color = "#ffffff";
             }
         });
@@ -614,32 +698,27 @@
             const cx = bohrCanvas.width / 2;
             const cy = bohrCanvas.height / 2;
             
-            // Protoni/Neutroni Centrali
             bohrCtx.beginPath();
             bohrCtx.arc(cx, cy, 12, 0, Math.PI*2);
             bohrCtx.fillStyle = '#ffffff';
             bohrCtx.fill();
             
-            // Orbita di base n=1
             bohrCtx.beginPath();
             bohrCtx.arc(cx, cy, 55, 0, Math.PI*2);
-            bohrCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+            bohrCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
             bohrCtx.setLineDash([4, 4]);
             bohrCtx.stroke();
             
-            // Orbita periferica n=2
             bohrCtx.beginPath();
             bohrCtx.arc(cx, cy, 95, 0, Math.PI*2);
-            bohrCtx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+            bohrCtx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
             bohrCtx.stroke();
             bohrCtx.setLineDash([]); 
             
-            // Calcolo dinamico del raggio in base allo stato
             let targetRadius = currentOrbit === 1 ? 55 : 95;
             let ex = cx + Math.cos(angle) * targetRadius;
             let ey = cy + Math.sin(angle) * targetRadius;
             
-            // Particella Elettrone
             bohrCtx.beginPath();
             bohrCtx.arc(ex, ey, 7, 0, Math.PI*2);
             bohrCtx.fillStyle = currentOrbit === 1 ? '#00f2fe' : '#ff007f';
@@ -648,7 +727,6 @@
             bohrCtx.fill();
             bohrCtx.shadowBlur = 0;
             
-            // Velocità angolare coerente (più lento all'esterno per Keplero/Bohr)
             angle += currentOrbit === 1 ? 0.04 : 0.02;
             
             requestAnimationFrame(drawBohr);
