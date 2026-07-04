@@ -279,7 +279,6 @@
 
         let d3d, t3d, r3d, b3d, s3d;
         let daltonMesh, thomsonGroup, pudding, ruthGroup, re1, re2, bohrGroup, be1, be2, be3, schroGroup, qCloud;
-        let orbitGroup1, orbitGroup2, orbitGroup3; // Pivot di Bohr per ancoraggio perfetto
 
         // INIZIALIZZAZIONE QUANDO IL LAYOUT È PRONTO E CARICATO
         window.addEventListener('load', () => {
@@ -344,7 +343,7 @@
                 ruthGroup.add(re1, re2);
             }
 
-            // 4. BOHR (FIX AUTOMATICO DELLE ORBITE)
+            // 4. BOHR (FIX DEFINITIVO ASSI)
             b3d = setupAtomEngine('canvas-bohr');
             if(b3d) {
                 bohrGroup = new THREE.Group();
@@ -353,7 +352,7 @@
                 const bohrNucleus = new THREE.Mesh(new THREE.IcosahedronGeometry(0.28, 2), new THREE.MeshPhongMaterial({ color: 0xff00ff }));
                 bohrGroup.add(bohrNucleus);
 
-                // Orbite geometriche visibili
+                // Orbite visive (piane su X-Y e inclinate su X di Math.PI / 2.5)
                 const bO1 = new THREE.Mesh(new THREE.RingGeometry(0.98, 1.02, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
                 const bO2 = new THREE.Mesh(new THREE.RingGeometry(1.58, 1.62, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
                 const bO3 = new THREE.Mesh(new THREE.RingGeometry(2.18, 2.22, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
@@ -361,20 +360,11 @@
                 bO1.rotation.x = bO2.rotation.x = bO3.rotation.x = Math.PI / 2.5;
                 bohrGroup.add(bO1, bO2, bO3);
 
-                // Gruppi Pivot locali inclinati esattamente a 72 gradi (Math.PI / 2.5)
-                orbitGroup1 = new THREE.Group(); orbitGroup1.rotation.x = Math.PI / 2.5;
-                orbitGroup2 = new THREE.Group(); orbitGroup2.rotation.x = Math.PI / 2.5;
-                orbitGroup3 = new THREE.Group(); orbitGroup3.rotation.x = Math.PI / 2.5;
-                bohrGroup.add(orbitGroup1, orbitGroup2, orbitGroup3);
-
                 be1 = new THREE.Mesh(electronGeo, electronMat); 
                 be2 = new THREE.Mesh(electronGeo, electronMat); 
                 be3 = new THREE.Mesh(electronGeo, electronMat);
                 
-                // Iniettiamo gli elettroni come figli diretti dei piani ruotati
-                orbitGroup1.add(be1);
-                orbitGroup2.add(be2);
-                orbitGroup3.add(be3);
+                bohrGroup.add(be1, be2, be3);
             }
 
             // 5. SCHRÖDINGER
@@ -447,15 +437,25 @@
                 r3d.renderer.render(r3d.scene, r3d.camera);
             }
 
-            // Render Bohr (Ancoraggio perfetto senza slittamento)
+            // Render Bohr (Sincronizzazione geometrica perfetta sul piano X-Y ruotato)
             if (b3d && bohrGroup) {
-                bohrGroup.rotation.y = time * 0.05; // Rotazione globale dell'atomo
+                bohrGroup.rotation.y = time * 0.05; // Rotazione lenta globale dell'atomo
                 
-                // Muovendosi su un piano bidimensionale già inclinato,
-                // gli elettroni rimangono incollati fisicamente all'anello
-                be1.position.set(Math.cos(time * 4.0) * 1.0, Math.sin(time * 4.0) * 1.0, 0);
-                be2.position.set(Math.cos(time * 2.5) * 1.6, Math.sin(time * 2.5) * 1.6, 0);
-                be3.position.set(Math.cos(time * 1.8) * 2.2, Math.sin(time * 1.8) * 2.2, 0);
+                const inclinazioneX = Math.PI / 2.5;
+
+                // Calcolo esatto: orbita nativa in 2D (X, Y) inclinata poi sull'asse X
+                const posB1 = new THREE.Vector3(Math.cos(time * 4.0) * 1.0, Math.sin(time * 4.0) * 1.0, 0)
+                    .applyAxisAngle(new THREE.Vector3(1, 0, 0), inclinazioneX);
+                    
+                const posB2 = new THREE.Vector3(Math.cos(time * 2.5) * 1.6, Math.sin(time * 2.5) * 1.6, 0)
+                    .applyAxisAngle(new THREE.Vector3(1, 0, 0), inclinazioneX);
+                    
+                const posB3 = new THREE.Vector3(Math.cos(time * 1.8) * 2.2, Math.sin(time * 1.8) * 2.2, 0)
+                    .applyAxisAngle(new THREE.Vector3(1, 0, 0), inclinazioneX);
+                
+                be1.position.copy(posB1); 
+                be2.position.copy(posB2); 
+                be3.position.copy(posB3);
                 
                 b3d.renderer.render(b3d.scene, b3d.camera);
             }
