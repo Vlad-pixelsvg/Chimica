@@ -439,19 +439,31 @@
                 r3d.renderer.render(r3d.scene, r3d.camera);
             }
 
-            // Render Bohr
-            if (b3d && bohrGroup) {
-                bohrGroup.rotation.y = time * 0.05;
-                
-                const posB1 = new THREE.Vector3(Math.cos(time * 4) * 1.0, 0, Math.sin(time * 4) * 1.0).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
-                const posB2 = new THREE.Vector3(Math.cos(time * 2.5) * 1.6, 0, Math.sin(time * 2.5) * 1.6).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
-                const posB3 = new THREE.Vector3(Math.cos(time * 1.8) * 2.2, 0, Math.sin(time * 1.8) * 2.2).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
-                
-                be1.position.copy(posB1); 
-                be2.position.copy(posB2); 
-                be3.position.copy(posB3);
-                b3d.renderer.render(b3d.scene, b3d.camera);
-            }
+          // =========================================================================
+// FIX BOHR: Gli elettroni ora seguono perfettamente i cerchi
+// =========================================================================
+if (b3d && bohrGroup) {
+    bohrGroup.rotation.y = time * 0.05; // Rotazione globale del modello
+    
+    // 1. Calcoliamo la posizione orizzontale standard (X, Z) sui tre raggi differenti
+    // 2. Applichiamo SOLO la rotazione sull'asse X di (Math.PI / 2.5), esattamente come i RingGeometry
+    
+    const posB1 = new THREE.Vector3(Math.cos(time * 4) * 1.0, 0, Math.sin(time * 4) * 1.0)
+        .applyAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2.5);
+        
+    const posB2 = new THREE.Vector3(Math.cos(time * 2.5) * 1.6, 0, Math.sin(time * 2.5) * 1.6)
+        .applyAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2.5);
+        
+    const posB3 = new THREE.Vector3(Math.cos(time * 1.8) * 2.2, 0, Math.sin(time * 1.8) * 2.2)
+        .applyAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2.5);
+    
+    // Copiamo le coordinate millimetriche sulle mesh degli elettroni
+    be1.position.copy(posB1); 
+    be2.position.copy(posB2); 
+    be3.position.copy(posB3);
+    
+    b3d.renderer.render(b3d.scene, b3d.camera);
+}
 
             // Render Schrödinger
             if (s3d && qCloud) {
