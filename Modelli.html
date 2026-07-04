@@ -29,8 +29,9 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 8%;
-            background: rgba(10, 10, 12, 0.8);
+            background: rgba(10, 10, 12, 0.85);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 1000;
         }
@@ -49,21 +50,21 @@
             width: 100vw;
             height: 100vh;
             z-index: 1;
-            pointer-events: none; /* Lascia che il mouse interagisca con lo scroll e i testi */
+            pointer-events: none;
         }
 
         /* Layout Contenuti */
         .main-content {
             position: relative;
             z-index: 2;
-            margin-top: 100px;
-            padding: 0 8%;
+            margin-top: 120px;
+            padding: 0 8% 100px 8%;
         }
 
         .page-title {
             text-align: center;
             font-size: 3.5rem;
-            margin-bottom: 50px;
+            margin-bottom: 80px;
             background: linear-gradient(45deg, #ffffff, #00f2fe);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -74,30 +75,42 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            min-height: 80vh;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 40px 0;
+            min-height: 90vh;
+            padding: 60px 0;
         }
 
-        /* Inverte l'ordine per fare un layout a scacchiera alternato */
+        /* Inverte l'ordine per fare un layout a scacchiera alternato su Desktop */
         .model-section:nth-child(even) {
             flex-direction: row-reverse;
         }
 
+        /* SCHEDA DI TESTO OTTIMIZZATA PER LEGGIBILITÀ */
         .info-box {
             width: 45%;
+            background: rgba(15, 15, 20, 0.7); /* Sfondo scuro semitrasparente */
+            backdrop-filter: blur(14px);        /* Sfoca i modelli 3D che passano dietro */
+            -webkit-backdrop-filter: blur(14px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .info-box:hover {
+            border-color: rgba(0, 242, 254, 0.3);
         }
 
         .info-box h2 {
             font-size: 2.2rem;
             color: #00f2fe;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .info-box h3 {
             font-size: 1.1rem;
             color: #a0a0a5;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             font-weight: 400;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -109,11 +122,49 @@
             color: #e0e0e5;
             margin-bottom: 15px;
         }
+        
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
 
-        /* Spazio vuoto trasparente dove "traspare" il modello 3D sottostante */
+        /* Spazio vuoto trasparente per il modello 3D */
         .spacer-box {
             width: 50%;
             height: 400px;
+        }
+
+        /* =========================================================================
+           MEDIA QUERIES PER DISPOSITIVI MOBILI (MOBILE FRIENDLY)
+           ========================================================================= */
+        @media (max-width: 968px) {
+            .navbar {
+                padding: 15px 5%;
+            }
+            .nav-links {
+                display: none; /* Nasconde i link per semplicità su mobile, o puoi fare un menu a comparsa */
+            }
+            .page-title {
+                font-size: 2.2rem;
+                margin-bottom: 40px;
+            }
+            .model-section, .model-section:nth-child(even) {
+                flex-direction: column; /* Il testo e lo spazio 3D si allineano in verticale */
+                justify-content: center;
+                min-height: auto;
+                padding: 40px 0;
+            }
+            .info-box {
+                width: 100%; /* La scheda occupa tutta la larghezza dello schermo */
+                padding: 25px;
+                margin-bottom: 20px;
+            }
+            .spacer-box {
+                width: 100%;
+                height: 300px; /* Ridotto l'altezza del viewport 3D per i telefoni */
+            }
+            .info-box h2 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
@@ -149,7 +200,7 @@
                 <h2>2. Il Modello di Thomson</h2>
                 <h3>1904 • Il Modello a "Panettone"</h3>
                 <p>In seguito alla scoperta dell'elettrone (la prima particella subatomica carica negativamente), Joseph John Thomson dovette scardinare l'idea di Dalton. Se esistono frammenti più piccoli all'interno dell'atomo, esso non è indivisibile.</p>
-                <p>Thomson immagino l'atomo come una sfera fluida di carica positiva diffusa ed omogenea, all'interno della quale erano immersi e distribuiti gli elettroni negativi in posizioni fisse, proprio come le uvette all'interno di un panettone inglese (Plum Pudding).</p>
+                <p>Thomson immaginò l'atomo come una sfera fluida di carica positiva diffusa ed omogenea, all'interno della quale erano immersi e distribuiti gli elettroni negativi in posizioni fisse, proprio come le uvette all'interno di un panettone inglese (Plum Pudding).</p>
             </div>
             <div class="spacer-box"></div>
         </section>
@@ -184,218 +235,3 @@
             <div class="spacer-box"></div>
         </section>
     </main>
-
-    <script>
-// =========================================================================
-// CONFIGURAZIONE SCENA, TELECAMERA E RENDERIZZATORE GLOBALE
-// =========================================================================
-const container = document.getElementById('canvas-container');
-const scene = new THREE.Scene();
-
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-// Posizione iniziale della telecamera (inquadra il primo modello)
-camera.position.set(-12, 0, 7); 
-
-const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-container.appendChild(renderer.domElement);
-
-// Luci globali
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambientLight);
-
-const dirLight = new THREE.DirectionalLight(0x00f2fe, 1.5);
-dirLight.position.set(0, 10, 10);
-scene.add(dirLight);
-
-// Array in cui salveremo le coordinate X di riferimento dei 5 atomi per allinearli allo scroll
-const atomPositionsX = [-12, -6, 0, 6, 12];
-
-// FUNZIONE TRUCCO PER PARTICELLE A CERCHI PERFETTI
-function createCircleMaterial(color, size, opacity) {
-    const mat = new THREE.PointsMaterial({
-        color: color, size: size, transparent: true, opacity: opacity, blending: THREE.AdditiveBlending, depthWrite: false
-    });
-    mat.onBeforeCompile = (shader) => {
-        shader.fragmentShader = shader.fragmentShader.replace('void main() {',
-            `void main() { vec2 coord = gl_PointCoord - vec2(0.5); float dist = length(coord); if (dist > 0.5) discard; float alpha = smoothstep(0.5, 0.1, dist);`
-        );
-        shader.fragmentShader = shader.fragmentShader.replace('gl_FragColor = vec4( diffuse, opacity );', 'gl_FragColor = vec4( diffuse, opacity * alpha );');
-    };
-    return mat;
-}
-
-// =========================================================================
-// CREAZIONE DEI 5 MODELLI ATOMICI DISPOSTI IN FILA (ASSET X DISTINTI)
-// =========================================================================
-
-// --- 1. MODELLO DI DALTON (Sfera solida impenetrabile) ---
-const daltonGroup = new THREE.Group();
-daltonGroup.position.x = atomPositionsX[0];
-scene.add(daltonGroup);
-
-const daltonGeo = new THREE.SphereGeometry(1.5, 32, 32);
-const daltonMat = new THREE.MeshPhongMaterial({ color: 0x4a4e69, roughness: 0.8, metalness: 0.2 });
-const daltonMesh = new THREE.Mesh(daltonGeo, daltonMat);
-daltonGroup.add(daltonMesh);
-
-
-// --- 2. MODELLO DI THOMSON (Massa fluida con elettroni incastonati) ---
-const thomsonGroup = new THREE.Group();
-thomsonGroup.position.x = atomPositionsX[1];
-scene.add(thomsonGroup);
-
-// Massa fluida semitrasparente positiva
-const puddingGeo = new THREE.SphereGeometry(1.6, 32, 32);
-const puddingMat = new THREE.MeshPhongMaterial({ color: 0xff0055, transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending });
-const pudding = new THREE.Mesh(puddingGeo, puddingMat);
-thomsonGroup.add(pudding);
-
-// Elettroni (piccole sfere blu fisse all'interno)
-const electronGeo = new THREE.SphereGeometry(0.12, 16, 16);
-const electronMat = new THREE.MeshPhongMaterial({ color: 0x00f2fe, emissive: 0x00f2fe, emissiveIntensity: 0.5 });
-for (let i = 0; i < 10; i++) {
-    const el = new THREE.Mesh(electronGeo, electronMat);
-    // Distribuzione casuale confinata all'interno della sfera grande
-    const u = Math.random(); const v = Math.random(); const theta = u * 2 * Math.PI; const phi = Math.acos(2 * v - 1); const r = Math.random() * 1.2;
-    el.position.set(r * Math.sin(phi) * Math.cos(theta), r * Math.sin(phi) * Math.sin(theta), r * Math.cos(phi));
-    thomsonGroup.add(el);
-}
-
-
-// --- 3. MODELLO DI RUTHERFORD (Nucleo + Orbite ellittiche incrociate) ---
-const rutherfordGroup = new THREE.Group();
-rutherfordGroup.position.x = atomPositionsX[2];
-scene.add(rutherfordGroup);
-
-// Nucleo centrale denso
-const ruthNucleus = new THREE.Mesh(new THREE.IcosahedronGeometry(0.2, 2), new THREE.MeshPhongMaterial({ color: 0xff00ff }));
-rutherfordGroup.add(ruthNucleus);
-
-// Orbite lineari ellittiche inclinate
-const createOrbitLine = (radiusX, radiusY, rotX, rotY) => {
-    const points = [];
-    for(let i=0; i<=100; i++) { const t = (i/100)*Math.PI*2; points.push(new THREE.Vector3(Math.cos(t)*radiusX, Math.sin(t)*radiusY, 0)); }
-    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(points), new THREE.LineBasicMaterial({ color: 0xffffff, transparent:true, opacity:0.2 }));
-    line.rotation.x = rotX; line.rotation.y = rotY;
-    return line;
-};
-const ro1 = createOrbitLine(1.8, 0.8, 0.5, 0.5); const ro2 = createOrbitLine(1.8, 0.8, -0.5, 1.2); const ro3 = createOrbitLine(1.8, 0.8, 1.5, -0.3);
-rutherfordGroup.add(ro1, ro2, ro3);
-
-// Elettroni planetari
-const re1 = new THREE.Mesh(electronGeo, electronMat); rutherfordGroup.add(re1);
-const re2 = new THREE.Mesh(electronGeo, electronMat); rutherfordGroup.add(re2);
-
-
-// --- 4. MODELLO DI BOHR (Nucleo + Orbite quantizzate concentriche) ---
-const bohrGroup = new THREE.Group();
-bohrGroup.position.x = atomPositionsX[3];
-scene.add(bohrGroup);
-
-const bohrNucleus = new THREE.Mesh(new THREE.IcosahedronGeometry(0.22, 2), new THREE.MeshPhongMaterial({ color: 0xff00ff }));
-bohrGroup.add(bohrNucleus);
-
-// 3 Anelli concentrici precisi
-const bO1 = new THREE.Mesh(new THREE.RingGeometry(1.0, 1.03, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
-const bO2 = new THREE.Mesh(new THREE.RingGeometry(1.6, 1.63, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
-const bO3 = new THREE.Mesh(new THREE.RingGeometry(2.2, 2.23, 64), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent:true, opacity:0.15 }));
-bO1.rotation.x = bO2.rotation.x = bO3.rotation.x = Math.PI / 2.5; // incliniamo leggermente il guscio
-bohrGroup.add(bO1, bO2, bO3);
-
-// 3 Elettroni quantizzati fissati su binari precisi
-const be1 = new THREE.Mesh(electronGeo, electronMat); bohrGroup.add(be1);
-const be2 = new THREE.Mesh(electronGeo, electronMat); bohrGroup.add(be2);
-const be3 = new THREE.Mesh(electronGeo, electronMat); bohrGroup.add(be3);
-
-
-// --- 5. MODELLO DI SCHRÖDINGER (Nuvola ondulatoria di probabilità a cerchi) ---
-const schrodingerGroup = new THREE.Group();
-schrodingerGroup.position.x = atomPositionsX[4];
-scene.add(schrodingerGroup);
-
-const schroNucleus = new THREE.Mesh(new THREE.IcosahedronGeometry(0.15, 2), new THREE.MeshPhongMaterial({ color: 0xff00ff }));
-schrodingerGroup.add(schroNucleus);
-
-const qCount = 1800;
-const qGeometry = new THREE.BufferGeometry();
-const qPositions = new Float32Array(qCount * 3);
-for (let i = 0; i < qCount; i++) {
-    const theta = Math.random() * Math.PI * 2; const phi = Math.acos((Math.random() * 2) - 1);
-    const r = Math.pow(Math.random(), 2.5) * 1.8 + 0.1; // Accumulo statistico centrale
-    qPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta); qPositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta); qPositions[i * 3 + 2] = r * Math.cos(phi);
-}
-qGeometry.setAttribute('position', new THREE.BufferAttribute(qPositions, 3));
-const qCloud = new THREE.Points(qGeometry, createCircleMaterial(0x00f2fe, 0.11, 0.7));
-schrodingerGroup.add(qCloud);
-
-
-// =========================================================================
-// INTERAZIONE CON LO SCROLL (SPOSTAMENTO FLUIDO DELLA TELECAMERA)
-// =========================================================================
-let currentTargetX = atomPositionsX[0];
-
-window.addEventListener('scroll', () => {
-    // Calcoliamo la percentuale di scroll totale della pagina (0 a 1)
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollPercent = window.scrollY / (maxScroll || 1);
-
-    // Mappiamo la percentuale di scroll sull'indice corrispondente della fila dei 5 atomi
-    const index = Math.min(Math.floor(scrollPercent * 5), 4);
-    
-    // Assegniamo la coordinata X target su cui la telecamera deve scivolare
-    currentTargetX = atomPositionsX[index];
-});
-
-
-// =========================================================================
-// LOOP DI ANIMAZIONE INDIPENDENTE E UNIFICATO
-// =========================================================================
-const clock = new THREE.Clock();
-
-function animate() {
-    requestAnimationFrame(animate);
-    const time = clock.getElapsedTime();
-
-    // 1. Animazione Dalton: Rotazione lenta e costante
-    daltonGroup.rotation.y = time * 0.2;
-
-    // 2. Animazione Thomson: Oscillazione energetica del panettone fluido
-    thomsonGroup.rotation.y = time * 0.15;
-    pudding.scale.setScalar(1 + Math.sin(time * 2) * 0.03);
-
-    // 3. Animazione Rutherford: Movimento elettroni su ellissi
-    rutherfordGroup.rotation.y = time * 0.05;
-    // Calcolo coordinate orbitanti ellittiche tridimensionali per gli elettroni carichi
-    const posE1 = new THREE.Vector3(Math.cos(time * 3.5) * 1.8, Math.sin(time * 3.5) * 0.8, 0).applyAxisAngle(new THREE.Vector3(1,0,0), 0.5).applyAxisAngle(new THREE.Vector3(0,1,0), 0.5);
-    const posE2 = new THREE.Vector3(Math.cos(time * 2.8) * 1.8, Math.sin(time * 2.8) * 0.8, 0).applyAxisAngle(new THREE.Vector3(1,0,0), -0.5).applyAxisAngle(new THREE.Vector3(0,1,0), 1.2);
-    re1.position.copy(posE1); re2.position.copy(posE2);
-
-    // 4. Animazione Bohr: Elettroni stabili su binari circolari concentrici quantizzati
-    bohrGroup.rotation.y = time * 0.03;
-    const posB1 = new THREE.Vector3(Math.cos(time * 4) * 1.0, 0, Math.sin(time * 4) * 1.0).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
-    const posB2 = new THREE.Vector3(Math.cos(time * 2.5) * 1.6, 0, Math.sin(time * 2.5) * 1.6).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
-    const posB3 = new THREE.Vector3(Math.cos(time * 1.8) * 2.2, 0, Math.sin(time * 1.8) * 2.2).applyAxisAngle(new THREE.Vector3(1,0,0), Math.PI / 2.5);
-    be1.position.copy(posB1); be2.position.copy(posB2); be3.position.copy(posB3);
-
-    // 5. Animazione Schrödinger: Vibrazione ondulatoria quantistica
-    qCloud.rotation.y = time * 0.08;
-    qCloud.rotation.z = Math.sin(time * 0.3) * 0.1;
-
-    // SCROLL INTERATTIVO: Spostamento rallentato ed elegante della telecamera verso l'atomo attivo
-    camera.position.x += (currentTargetX - camera.position.x) * 0.06;
-
-    renderer.render(scene, camera);
-}
-animate();
-
-// GESTIONE RESPONSIVE WINDOW
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
-</script>
-</body>
-</html>
